@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { CroissantIcon as Bread } from "lucide-react"
+import { Croissant } from "lucide-react"
 import Link from "next/link"
 import { containerVariants, itemVariants } from "@/lib/animations"
 
@@ -30,7 +30,7 @@ export function Footer() {
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
               >
-                <Bread className="h-6 w-6" />
+                <Croissant className="h-6 w-6" />
               </motion.div>
               <h4 className="text-xl font-bold">Vasse Bakery</h4>
             </div>

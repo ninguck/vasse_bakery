@@ -1,6 +1,6 @@
+import "./globals.css"
 import type React from "react"
 import type { Metadata } from "next"
-import "./globals.css"
 import { ToastProvider } from "@/components/layout/toast-provider"
 
 export const metadata: Metadata = {

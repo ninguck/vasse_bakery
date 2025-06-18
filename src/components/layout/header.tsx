@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { CroissantIcon as Bread } from "lucide-react"
+import { Croissant } from "lucide-react"
 import Link from "next/link"
 
 export function Header() {
@@ -21,7 +21,7 @@ export function Header() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center space-x-2"
           >
-            <Bread className="h-8 w-8 text-[#E6C366]" />
+            <Croissant className="h-8 w-8 text-[#E6C366]" />
             <div>
               <h1 className="text-2xl font-bold text-chocolate">Vasse Bakery</h1>
               <p className="text-sm text-caramel">Fresh • Local • Delicious</p>

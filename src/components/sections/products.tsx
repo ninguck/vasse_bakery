@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Coffee, Cake, CroissantIcon as Bread, PieChart } from "lucide-react"
+import { Coffee, Cake, Croissant, PieChart } from "lucide-react"
 import Image from "next/image"
 import { PRODUCT_DETAILS } from "@/lib/data"
 import { containerVariants, itemVariants, modalVariants } from "@/lib/animations"
@@ -24,42 +24,42 @@ interface ProductsSectionProps {
 export function ProductsSection({ selectedProduct, setSelectedProduct }: ProductsSectionProps) {
   const products = [
     {
-      key: "pies",
+      key: "pies" as const,
       title: "Artisanal Pies",
       description: "Savory and sweet pies made with premium ingredients and traditional recipes.",
       image: "/placeholder.svg?height=250&width=300&text=Fresh Pies",
       badge: { icon: PieChart, text: "Pies", color: "bg-caramel" },
     },
     {
-      key: "pastries",
+      key: "pastries" as const,
       title: "Fresh Pastries",
       description: "Buttery croissants, Danish pastries, and seasonal specialties baked daily.",
       image: "/placeholder.svg?height=250&width=300&text=Fresh Pastries",
       badge: { text: "Pastries", color: "bg-sage" },
     },
     {
-      key: "bread",
+      key: "bread" as const,
       title: "Artisan Bread",
       description: "Crusty sourdoughs, soft sandwich loaves, and specialty breads made fresh.",
       image: "/placeholder.svg?height=250&width=300&text=Artisan Bread",
-      badge: { icon: Bread, text: "Bread", color: "bg-chocolate" },
+      badge: { icon: Croissant, text: "Bread", color: "bg-chocolate" },
     },
     {
-      key: "cakes",
+      key: "cakes" as const,
       title: "Custom Cakes",
       description: "Beautiful celebration cakes and daily treats perfect for any occasion.",
       image: "/placeholder.svg?height=250&width=300&text=Custom Cakes",
       badge: { icon: Cake, text: "Cakes", color: "bg-beige text-chocolate" },
     },
     {
-      key: "coffee",
+      key: "coffee" as const,
       title: "Premium Coffee",
       description: "Freshly roasted beans and expertly crafted espresso drinks.",
       image: "/placeholder.svg?height=250&width=300&text=Premium Coffee",
       badge: { icon: Coffee, text: "Coffee", color: "bg-caramel" },
     },
     {
-      key: "sushi",
+      key: "sushi" as const,
       title: "Sushi & Rolls",
       description: "Fresh sushi and gourmet rolls made daily with quality ingredients.",
       image: "/placeholder.svg?height=250&width=300&text=Sushi & Rolls",
@@ -167,10 +167,10 @@ export function ProductsSection({ selectedProduct, setSelectedProduct }: Product
                 <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit">
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-chocolate">
-                      {PRODUCT_DETAILS[selectedProduct]?.title}
+                      {selectedProduct && PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.title}
                     </DialogTitle>
                     <DialogDescription className="text-chocolate/70">
-                      {PRODUCT_DETAILS[selectedProduct]?.description}
+                      {selectedProduct && PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.description}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
@@ -181,8 +181,8 @@ export function ProductsSection({ selectedProduct, setSelectedProduct }: Product
                       className="relative overflow-hidden rounded-xl"
                     >
                       <Image
-                        src={PRODUCT_DETAILS[selectedProduct]?.image || "/placeholder.svg?height=300&width=500"}
-                        alt={PRODUCT_DETAILS[selectedProduct]?.title || "Product"}
+                        src={selectedProduct && PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.image || "/placeholder.svg?height=300&width=500"}
+                        alt={selectedProduct && PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.title || "Product"}
                         width={500}
                         height={300}
                         className="w-full h-64 object-cover"
@@ -196,7 +196,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct }: Product
                         animate="visible"
                         className="grid grid-cols-1 md:grid-cols-2 gap-4"
                       >
-                        {PRODUCT_DETAILS[selectedProduct]?.items.map((item, index) => (
+                        {selectedProduct && PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.items.map((item: { name: string; description: string }, index: number) => (
                           <motion.div
                             key={index}
                             variants={itemVariants}

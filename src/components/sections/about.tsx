@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { CroissantIcon as Bread, MapPin, Coffee } from "lucide-react"
+import { Croissant, MapPin, Coffee } from "lucide-react"
 import { containerVariants, cardVariants } from "@/lib/animations"
 
 export function AboutSection() {
   const features = [
     {
-      icon: Bread,
+      icon: Croissant,
       title: "Fresh Daily",
       description: "Everything is baked fresh each morning using high-quality ingredients and traditional methods.",
       bgColor: "bg-sage/20",

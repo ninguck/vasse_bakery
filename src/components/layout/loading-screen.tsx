@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, Variants } from "framer-motion"
-import { CroissantIcon as Bread } from "lucide-react"
+import { Croissant } from "lucide-react"
 import { useEffect, useState } from "react"
 
 interface LoadingScreenProps {
@@ -123,7 +123,7 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
       >
         <div className="flex items-center space-x-4">
           <motion.div variants={logoVariants} animate="spinning" className="relative">
-            <Bread className="h-16 w-16 text-chocolate" />
+            <Croissant className="h-16 w-16 text-chocolate" />
           </motion.div>
           <div className="overflow-hidden">
             <motion.div variants={titleContainerVariants} initial="hidden" animate="visible" className="flex">
