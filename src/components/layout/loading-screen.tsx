@@ -2,12 +2,24 @@
 
 import { motion, Variants } from "framer-motion"
 import { CroissantIcon as Bread } from "lucide-react"
+import { useEffect, useState } from "react"
 
 interface LoadingScreenProps {
   isLoading: boolean
 }
 
 export function LoadingScreen({ isLoading }: LoadingScreenProps) {
+  const [exitXY, setExitXY] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setExitXY({
+        x: -window.innerWidth / 2 + 100,
+        y: -window.innerHeight / 2 + 50,
+      })
+    }
+  }, [])
+
   const loadingVariants: Variants = {
     initial: {
       scale: 1,
@@ -16,8 +28,8 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
     },
     exit: {
       scale: 0.3,
-      x: -window.innerWidth / 2 + 100,
-      y: -window.innerHeight / 2 + 50,
+      x: exitXY.x,
+      y: exitXY.y,
       transition: {
         duration: 1,
         ease: "easeInOut",
