@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer"
 import { HeroSection } from "@/components/sections/hero"
 import { AboutSection } from "@/components/sections/about"
 import { ProductsSection } from "@/components/sections/products"
+import { LocationSection } from "@/components/sections/location"
 
 export default function VasseBakery() {
 
@@ -17,6 +18,7 @@ export default function VasseBakery() {
       <HeroSection />
       <AboutSection />
       <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
+      <LocationSection />
       <Footer />
     </div>
   )
