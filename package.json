@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "tailwind:debug": "npx tailwindcss -i ./src/app/globals.css -o debug-output.css --watch",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:api": "jest --testPathPattern=src/__tests__/api"
