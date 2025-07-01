@@ -15,6 +15,7 @@ import toast from "react-hot-toast"
 
 export default function VasseBakeryLanding() {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
+  const [showMenu, setShowMenu] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showContent, setShowContent] = useState(false)
 
@@ -52,7 +53,7 @@ export default function VasseBakeryLanding() {
             <Header />
             <HeroSection />
             <AboutSection />
-            <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
+            <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} showMenu={showMenu} setShowMenu={setShowMenu} />
             <LocationSection />
             <CTASection />
             <FAQSection />
