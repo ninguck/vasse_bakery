@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "tailwind:debug": "npx tailwindcss -i ./src/app/globals.css -o debug-output.css --watch",
-    "test": "jest --runInBand",
+    "test": "dotenv -e .env.test -- jest --runInBand",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:api": "jest --testPathPattern=src/__tests__/api"
+    "test:api": "jest --testPathPattern=src/__tests__/api",
+    "db:push:test": "cross-env DOTENV_CONFIG_PATH=.env.test npx dotenv -e .env.test -- prisma db push",
+    "db:push:prod": "prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
@@ -38,6 +40,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "jest": "^30.0.3",
