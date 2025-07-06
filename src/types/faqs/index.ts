@@ -4,7 +4,6 @@ export interface FAQ {
     question: string;
     answer: string;
     createdAt: Date;
-    updatedAt: Date;
 }
 
 // FAQ Request Types

@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/db";
 import { 
     FAQ, 
-    CreateFAQRequest, 
-    UpdateFAQRequest, 
     FAQServiceInterface 
 } from "@/types/faqs";
+import { 
+    CreateFaqRequest, 
+    UpdateFaqRequest 
+} from "@/backend/validations/schemas/faqs";
 
 export const FaqService: FAQServiceInterface = {
     async getAll(): Promise<FAQ[]> {
@@ -19,7 +21,7 @@ export const FaqService: FAQServiceInterface = {
         });
     },
 
-    async create(data: CreateFAQRequest): Promise<FAQ> {
+    async create(data: CreateFaqRequest): Promise<FAQ> {
         return prisma.fAQ.create({
             data: {
                 question: data.question.trim(),
@@ -28,7 +30,7 @@ export const FaqService: FAQServiceInterface = {
         });
     },
 
-    async update(id: string, data: UpdateFAQRequest): Promise<FAQ> {
+    async update(id: string, data: UpdateFaqRequest): Promise<FAQ> {
         return prisma.fAQ.update({
             where: { id },
             data: {

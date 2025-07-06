@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FaqService } from "./faq.service";
 import { 
-    CreateFAQRequest, 
-    UpdateFAQRequest, 
     FAQApiResponse 
 } from "@/types/faqs";
+import { 
+    CreateFaqRequest, 
+    UpdateFaqRequest,
+    createFaqSchema,
+    updateFaqSchema
+} from "@/backend/validations/schemas/faqs";
+import { validateRequest } from "@/backend/validations/utils";
 
 export async function getAllFaqs(): Promise<NextResponse> {
     try {
@@ -31,17 +36,14 @@ export async function getFaqById(id: string): Promise<NextResponse> {
 
 export async function createFaq(request: NextRequest): Promise<NextResponse> {
     try {
-        const body: CreateFAQRequest = await request.json();
-        const { question, answer } = body;
-
-        if (!question || !answer) {
-            return NextResponse.json(
-                { error: "Question and answer are required" },
-                { status: 400 }
-            );
+        const body = await request.json();
+        const validation = validateRequest(createFaqSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
         }
 
-        const faq = await FaqService.create({ question, answer });
+        const faq = await FaqService.create(validation.data);
         return NextResponse.json(faq, { status: 201 });
 
     } catch (error) {
@@ -52,22 +54,19 @@ export async function createFaq(request: NextRequest): Promise<NextResponse> {
 
 export async function updateFaq(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body: UpdateFAQRequest = await request.json();
-        const { question, answer } = body;
+        const body = await request.json();
+        const validation = validateRequest(updateFaqSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
+        }
 
         const existing = await FaqService.getById(id);
         if (!existing) {
             return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
         }
 
-        if (!question || !answer) {
-            return NextResponse.json(
-                { error: "Question and answer are required" },
-                { status: 400 }
-            );
-        }
-
-        const updated = await FaqService.update(id, { question, answer });
+        const updated = await FaqService.update(id, validation.data);
         return NextResponse.json(updated);
 
     } catch (error) {
