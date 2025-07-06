@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { MenuItemService } from "./menuItem.service";
 import { prisma } from "@/lib/db";
 import {
-    CreateMenuItemRequest,
-    UpdateMenuItemRequest,
     MenuItemApiResponse
 } from "@/types/menuItems";
+import {
+    CreateMenuItemRequest,
+    UpdateMenuItemRequest,
+    createMenuItemSchema,
+    updateMenuItemSchema
+} from "@/backend/validations/schemas/menu-items";
+import { validateRequest } from "@/backend/validations/utils";
 
 export async function getAllMenuItems(): Promise<NextResponse> {
     try {
@@ -32,32 +37,28 @@ export async function getMenuItemById(id: string): Promise<NextResponse> {
 
 export async function createMenuItem(request: NextRequest): Promise<NextResponse> {
     try {
-        const body: CreateMenuItemRequest = await request.json();
-        const { name, description, price, productId, categoryId } = body;
-
-        if (!name || !description || price === undefined || price === null) {
-            return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
+        const body = await request.json();
+        const validation = validateRequest(createMenuItemSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
         }
 
-        if (typeof price !== "number" || price < 0) {
-            return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
-        }
-
-        if (!productId && !categoryId) {
+        if (!validation.data.productId && !validation.data.categoryId) {
             return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
         }
 
-        if (productId) {
-            const product = await prisma.product.findUnique({ where: { id: productId } });
+        if (validation.data.productId) {
+            const product = await prisma.product.findUnique({ where: { id: validation.data.productId } });
             if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
-        if (categoryId) {
-            const category = await prisma.category.findUnique({ where: { id: categoryId } });
+        if (validation.data.categoryId) {
+            const category = await prisma.category.findUnique({ where: { id: validation.data.categoryId } });
             if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
-        const menuItem = await MenuItemService.create({ name, description, price, productId, categoryId });
+        const menuItem = await MenuItemService.create(validation.data);
         return NextResponse.json(menuItem, { status: 201 });
 
     } catch (error) {
@@ -68,35 +69,31 @@ export async function createMenuItem(request: NextRequest): Promise<NextResponse
 
 export async function updateMenuItem(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body: UpdateMenuItemRequest = await request.json();
-        const { name, description, price, productId, categoryId } = body;
+        const body = await request.json();
+        const validation = validateRequest(updateMenuItemSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
+        }
 
         const existing = await MenuItemService.getById(id);
         if (!existing) return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
 
-        if (!name || !description || price === undefined || price === null) {
-            return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
-        }
-
-        if (typeof price !== "number" || price < 0) {
-            return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
-        }
-
-        if (!productId && !categoryId) {
+        if (!validation.data.productId && !validation.data.categoryId) {
             return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
         }
 
-        if (productId) {
-            const product = await prisma.product.findUnique({ where: { id: productId } });
+        if (validation.data.productId) {
+            const product = await prisma.product.findUnique({ where: { id: validation.data.productId } });
             if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
-        if (categoryId) {
-            const category = await prisma.category.findUnique({ where: { id: categoryId } });
+        if (validation.data.categoryId) {
+            const category = await prisma.category.findUnique({ where: { id: validation.data.categoryId } });
             if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
-        const updated = await MenuItemService.update(id, { name, description, price, productId, categoryId });
+        const updated = await MenuItemService.update(id, validation.data);
         return NextResponse.json(updated);
 
     } catch (error) {

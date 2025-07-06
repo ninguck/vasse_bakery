@@ -1,15 +1,20 @@
 import { prisma } from "@/lib/db";
 import {
     MenuItem,
-    CreateMenuItemRequest,
-    UpdateMenuItemRequest,
     MenuItemServiceInterface
 } from "@/types/menuItems";
+import {
+    CreateMenuItemRequest,
+    UpdateMenuItemRequest
+} from "@/backend/validations/schemas/menu-items";
 
 export const MenuItemService: MenuItemServiceInterface = {
     async getAll(): Promise<MenuItem[]> {
         return prisma.menuItem.findMany({
-            include: { product: true, category: true },
+            include: { 
+                product: true, 
+                category: true 
+            },
             orderBy: [{ category: { name: "asc" } }, { name: "asc" }],
         });
     },
@@ -17,7 +22,10 @@ export const MenuItemService: MenuItemServiceInterface = {
     async getById(id: string): Promise<MenuItem | null> {
         return prisma.menuItem.findUnique({
             where: { id },
-            include: { product: true, category: true },
+            include: { 
+                product: true, 
+                category: true 
+            },
         });
     },
 
@@ -30,7 +38,10 @@ export const MenuItemService: MenuItemServiceInterface = {
                 productId: data.productId || null,
                 categoryId: data.categoryId || null,
             },
-            include: { product: true, category: true },
+            include: { 
+                product: true, 
+                category: true 
+            },
         });
     },
 
@@ -44,7 +55,10 @@ export const MenuItemService: MenuItemServiceInterface = {
                 productId: data.productId || null,
                 categoryId: data.categoryId || null,
             },
-            include: { product: true, category: true },
+            include: { 
+                product: true, 
+                category: true 
+            },
         });
     },
 
