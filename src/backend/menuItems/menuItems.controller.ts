@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MenuItemService } from "./menuItem.service";
 import { prisma } from "@/lib/db";
+import {
+    CreateMenuItemRequest,
+    UpdateMenuItemRequest,
+    MenuItemApiResponse
+} from "@/types/menuItems";
 
-export async function getAllMenuItems() {
+export async function getAllMenuItems(): Promise<NextResponse> {
     try {
         const menuItems = await MenuItemService.getAll();
         return NextResponse.json(menuItems);
@@ -12,11 +17,11 @@ export async function getAllMenuItems() {
     }
 }
 
-export async function getMenuItemById(id: string) {
+export async function getMenuItemById(id: string): Promise<NextResponse> {
     try {
         const menuItem = await MenuItemService.getById(id);
         if (!menuItem) {
-        return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
+            return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
         }
         return NextResponse.json(menuItem);
     } catch (error) {
@@ -25,31 +30,31 @@ export async function getMenuItemById(id: string) {
     }
 }
 
-export async function createMenuItem(request: NextRequest) {
+export async function createMenuItem(request: NextRequest): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        const body: CreateMenuItemRequest = await request.json();
         const { name, description, price, productId, categoryId } = body;
 
         if (!name || !description || price === undefined || price === null) {
-        return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
+            return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
         }
 
         if (typeof price !== "number" || price < 0) {
-        return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
+            return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
         }
 
         if (!productId && !categoryId) {
-        return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
+            return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
         }
 
         if (productId) {
-        const product = await prisma.product.findUnique({ where: { id: productId } });
-        if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+            const product = await prisma.product.findUnique({ where: { id: productId } });
+            if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
         if (categoryId) {
-        const category = await prisma.category.findUnique({ where: { id: categoryId } });
-        if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
+            const category = await prisma.category.findUnique({ where: { id: categoryId } });
+            if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
         const menuItem = await MenuItemService.create({ name, description, price, productId, categoryId });
@@ -61,34 +66,34 @@ export async function createMenuItem(request: NextRequest) {
     }
 }
 
-export async function updateMenuItem(request: NextRequest, id: string) {
+export async function updateMenuItem(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        const body: UpdateMenuItemRequest = await request.json();
         const { name, description, price, productId, categoryId } = body;
 
         const existing = await MenuItemService.getById(id);
         if (!existing) return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
 
         if (!name || !description || price === undefined || price === null) {
-        return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
+            return NextResponse.json({ error: "Name, description, and price are required" }, { status: 400 });
         }
 
         if (typeof price !== "number" || price < 0) {
-        return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
+            return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
         }
 
         if (!productId && !categoryId) {
-        return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
+            return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
         }
 
         if (productId) {
-        const product = await prisma.product.findUnique({ where: { id: productId } });
-        if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+            const product = await prisma.product.findUnique({ where: { id: productId } });
+            if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
         if (categoryId) {
-        const category = await prisma.category.findUnique({ where: { id: categoryId } });
-        if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
+            const category = await prisma.category.findUnique({ where: { id: categoryId } });
+            if (!category) return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
         const updated = await MenuItemService.update(id, { name, description, price, productId, categoryId });
@@ -100,7 +105,7 @@ export async function updateMenuItem(request: NextRequest, id: string) {
     }
 }
 
-export async function deleteMenuItem(id: string) {
+export async function deleteMenuItem(id: string): Promise<NextResponse> {
     try {
         const existing = await MenuItemService.getById(id);
         if (!existing) return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
