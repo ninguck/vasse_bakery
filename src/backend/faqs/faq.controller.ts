@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FaqService } from "./faq.service";
+import { 
+    CreateFAQRequest, 
+    UpdateFAQRequest, 
+    FAQApiResponse 
+} from "@/types/faqs";
 
-export async function getAllFaqs() {
+export async function getAllFaqs(): Promise<NextResponse> {
     try {
         const faqs = await FaqService.getAll();
         return NextResponse.json(faqs);
@@ -11,11 +16,11 @@ export async function getAllFaqs() {
     }
 }
 
-export async function getFaqById(id: string) {
+export async function getFaqById(id: string): Promise<NextResponse> {
     try {
         const faq = await FaqService.getById(id);
         if (!faq) {
-        return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
+            return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
         }
         return NextResponse.json(faq);
     } catch (error) {
@@ -24,16 +29,16 @@ export async function getFaqById(id: string) {
     }
 }
 
-export async function createFaq(request: NextRequest) {
+export async function createFaq(request: NextRequest): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        const body: CreateFAQRequest = await request.json();
         const { question, answer } = body;
 
         if (!question || !answer) {
-        return NextResponse.json(
-            { error: "Question and answer are required" },
-            { status: 400 }
-        );
+            return NextResponse.json(
+                { error: "Question and answer are required" },
+                { status: 400 }
+            );
         }
 
         const faq = await FaqService.create({ question, answer });
@@ -45,21 +50,21 @@ export async function createFaq(request: NextRequest) {
     }
 }
 
-export async function updateFaq(request: NextRequest, id: string) {
+export async function updateFaq(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        const body: UpdateFAQRequest = await request.json();
         const { question, answer } = body;
 
         const existing = await FaqService.getById(id);
         if (!existing) {
-        return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
+            return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
         }
 
         if (!question || !answer) {
-        return NextResponse.json(
-            { error: "Question and answer are required" },
-            { status: 400 }
-        );
+            return NextResponse.json(
+                { error: "Question and answer are required" },
+                { status: 400 }
+            );
         }
 
         const updated = await FaqService.update(id, { question, answer });
@@ -71,11 +76,11 @@ export async function updateFaq(request: NextRequest, id: string) {
     }
 }
 
-export async function deleteFaq(id: string) {
+export async function deleteFaq(id: string): Promise<NextResponse> {
     try {
         const existing = await FaqService.getById(id);
         if (!existing) {
-        return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
+            return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
         }
 
         await FaqService.delete(id);

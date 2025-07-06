@@ -1,40 +1,46 @@
 import { prisma } from "@/lib/db";
+import { 
+    FAQ, 
+    CreateFAQRequest, 
+    UpdateFAQRequest, 
+    FAQServiceInterface 
+} from "@/types/faqs";
 
-export const FaqService = {
-    async getAll() {
+export const FaqService: FAQServiceInterface = {
+    async getAll(): Promise<FAQ[]> {
         return prisma.fAQ.findMany({
-        orderBy: { createdAt: "desc" },
+            orderBy: { createdAt: "desc" },
         });
     },
 
-    async getById(id: string) {
+    async getById(id: string): Promise<FAQ | null> {
         return prisma.fAQ.findUnique({
-        where: { id },
+            where: { id },
         });
     },
 
-    async create(data: { question: string; answer: string }) {
+    async create(data: CreateFAQRequest): Promise<FAQ> {
         return prisma.fAQ.create({
-        data: {
-            question: data.question.trim(),
-            answer: data.answer.trim(),
-        },
+            data: {
+                question: data.question.trim(),
+                answer: data.answer.trim(),
+            },
         });
     },
 
-    async update(id: string, data: { question: string; answer: string }) {
+    async update(id: string, data: UpdateFAQRequest): Promise<FAQ> {
         return prisma.fAQ.update({
-        where: { id },
-        data: {
-            question: data.question.trim(),
-            answer: data.answer.trim(),
-        },
+            where: { id },
+            data: {
+                question: data.question?.trim(),
+                answer: data.answer?.trim(),
+            },
         });
     },
 
-    async delete(id: string) {
-        return prisma.fAQ.delete({
-        where: { id },
+    async delete(id: string): Promise<void> {
+        await prisma.fAQ.delete({
+            where: { id },
         });
     },
 };
