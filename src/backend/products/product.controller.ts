@@ -1,7 +1,12 @@
 import { ProductService } from "./product.service";
 import { NextRequest, NextResponse } from "next/server";
+import { 
+    CreateProductRequest, 
+    UpdateProductRequest, 
+    ProductApiResponse 
+} from "@/types/products";
 
-export async function getAllProducts() {
+export async function getAllProducts(): Promise<NextResponse> {
     try {
         const products = await ProductService.getAll();
         return NextResponse.json(products);
@@ -11,7 +16,7 @@ export async function getAllProducts() {
     }
 }
 
-export async function getProductById(id: string) {
+export async function getProductById(id: string): Promise<NextResponse> {
     try {
         const product = await ProductService.getById(id);
         if (!product) {
@@ -24,25 +29,26 @@ export async function getProductById(id: string) {
     }
 }
 
-export async function createProduct(request: NextRequest) {
+export async function createProduct(request: NextRequest): Promise<NextResponse> {
     try {
-        const body = await request.json();
-        const { title, description, imageUrl} = body;
+        const body: CreateProductRequest = await request.json();
+        const { title, description, imageUrl } = body;
 
         if (!title || !description || !imageUrl) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const product = await ProductService.create(body);
-        return NextResponse.json(product, { status: 201});
+        return NextResponse.json(product, { status: 201 });
     } catch (error) {
+        console.error("Error creating product:", error);
         return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
     }
 }
 
-export async function updateProduct(request: NextRequest, id: string) {
+export async function updateProduct(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body = await request.json();
+        const body: UpdateProductRequest = await request.json();
         const existing = await ProductService.getById(id);
 
         if (!existing) {
@@ -57,7 +63,7 @@ export async function updateProduct(request: NextRequest, id: string) {
     }
 }
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(id: string): Promise<NextResponse> {
     try {
         const existing = await ProductService.getById(id);
         if (!existing) {

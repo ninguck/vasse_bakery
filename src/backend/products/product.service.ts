@@ -1,7 +1,13 @@
-import { prisma } from "@/lib/db";;
+import { prisma } from "@/lib/db";
+import { 
+    Product, 
+    CreateProductRequest, 
+    UpdateProductRequest, 
+    ProductServiceInterface 
+} from "@/types/products";
 
-export const ProductService = {
-    async getAll() {
+export const ProductService: ProductServiceInterface = {
+    async getAll(): Promise<Product[]> {
         return prisma.product.findMany({
             include: {
                 category: true,
@@ -13,7 +19,7 @@ export const ProductService = {
         });
     },
 
-    async getById(id: string) {
+    async getById(id: string): Promise<Product | null> {
         return prisma.product.findUnique({
             where: { id },
             include: {
@@ -23,7 +29,7 @@ export const ProductService = {
         });
     },
 
-    async create(data: any) {
+    async create(data: CreateProductRequest): Promise<Product> {
         return prisma.product.create({
             data: {
                 ...data,
@@ -36,7 +42,7 @@ export const ProductService = {
         });
     },
 
-    async update(id: string, data: any) {
+    async update(id: string, data: UpdateProductRequest): Promise<Product> {
         return prisma.product.update({
             where: { id },
             data: {
@@ -50,8 +56,8 @@ export const ProductService = {
         });
     },
 
-    async delete(id: string) {
-        return prisma.product.delete({
+    async delete(id: string): Promise<void> {
+        await prisma.product.delete({
             where: { id },
         });
     },
