@@ -1,10 +1,15 @@
 import { ProductService } from "./product.service";
 import { NextRequest, NextResponse } from "next/server";
 import { 
-    CreateProductRequest, 
-    UpdateProductRequest, 
     ProductApiResponse 
 } from "@/types/products";
+import { 
+    CreateProductRequest, 
+    UpdateProductRequest,
+    createProductSchema,
+    updateProductSchema
+} from "@/backend/validations/schemas/products";
+import { validateRequest } from "@/backend/validations/utils";
 
 export async function getAllProducts(): Promise<NextResponse> {
     try {
@@ -31,14 +36,14 @@ export async function getProductById(id: string): Promise<NextResponse> {
 
 export async function createProduct(request: NextRequest): Promise<NextResponse> {
     try {
-        const body: CreateProductRequest = await request.json();
-        const { title, description, imageUrl } = body;
-
-        if (!title || !description || !imageUrl) {
-            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        const body = await request.json();
+        const validation = validateRequest(createProductSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
         }
 
-        const product = await ProductService.create(body);
+        const product = await ProductService.create(validation.data);
         return NextResponse.json(product, { status: 201 });
     } catch (error) {
         console.error("Error creating product:", error);
@@ -48,14 +53,19 @@ export async function createProduct(request: NextRequest): Promise<NextResponse>
 
 export async function updateProduct(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body: UpdateProductRequest = await request.json();
-        const existing = await ProductService.getById(id);
+        const body = await request.json();
+        const validation = validateRequest(updateProductSchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
+        }
 
+        const existing = await ProductService.getById(id);
         if (!existing) {
             return NextResponse.json({ error: "Product not found" }, { status: 404 });
         }
 
-        const updated = await ProductService.update(id, body);
+        const updated = await ProductService.update(id, validation.data);
         return NextResponse.json(updated);
     } catch (error) {
         console.error("Error updating product:", error);

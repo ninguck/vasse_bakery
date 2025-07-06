@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/db";
 import { 
     Product, 
-    CreateProductRequest, 
-    UpdateProductRequest, 
     ProductServiceInterface 
 } from "@/types/products";
+import { 
+    CreateProductRequest, 
+    UpdateProductRequest 
+} from "@/backend/validations/schemas/products";
 
 export const ProductService: ProductServiceInterface = {
     async getAll(): Promise<Product[]> {
