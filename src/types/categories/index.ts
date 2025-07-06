@@ -2,23 +2,45 @@
 export interface Category {
     id: string;
     name: string;
-    products?: Product[];
-    menuItems?: MenuItem[];
+    products: ProductBasic[];
+    menuItems: MenuItemBasic[];
 }
 
+// Basic interfaces for database queries (no circular references)
+export interface ProductBasic {
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+    badgeText: string | null;
+    badgeColor: string | null;
+    badgeIcon: string | null;
+    categoryId: string | null;
+    createdAt: Date;
+}
+
+export interface MenuItemBasic {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    productId: string | null;
+    categoryId: string | null;
+}
+
+// Full interfaces for API responses (with circular references)
 export interface Product {
     id: string;
     title: string;
     description: string;
     imageUrl: string;
-    badgeText?: string;
-    badgeColor?: string;
-    badgeIcon?: string;
-    categoryId?: string;
+    badgeText: string | null;
+    badgeColor: string | null;
+    badgeIcon: string | null;
+    categoryId: string | null;
     createdAt: Date;
-    updatedAt: Date;
-    category?: Category;
-    menuItems?: MenuItem[];
+    category: Category | null;
+    menuItems: MenuItem[];
 }
 
 export interface MenuItem {
@@ -26,10 +48,10 @@ export interface MenuItem {
     name: string;
     description: string;
     price: number;
-    productId?: string;
-    categoryId?: string;
-    product?: Product;
-    category?: Category;
+    productId: string | null;
+    categoryId: string | null;
+    product: Product | null;
+    category: Category | null;
 }
 
 // Category Request Types

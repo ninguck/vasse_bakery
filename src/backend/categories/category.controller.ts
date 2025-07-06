@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CategoryService } from "./category.service";
 import { 
-    CreateCategoryRequest, 
-    UpdateCategoryRequest, 
     CategoryApiResponse 
 } from "@/types/categories";
+import { 
+    CreateCategoryRequest, 
+    UpdateCategoryRequest,
+    createCategorySchema,
+    updateCategorySchema
+} from "@/backend/validations/schemas/categories";
+import { validateRequest } from "@/backend/validations/utils";
 
 export async function getAllCategories(): Promise<NextResponse> {
     try {
@@ -31,19 +36,19 @@ export async function getCategoryById(id: string): Promise<NextResponse> {
 
 export async function createCategory(request: NextRequest): Promise<NextResponse> {
     try {
-        const body: CreateCategoryRequest = await request.json();
-        const { name } = body;
-
-        if (!name) {
-            return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+        const body = await request.json();
+        const validation = validateRequest(createCategorySchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
         }
 
-        const existing = await CategoryService.findByName(name);
+        const existing = await CategoryService.findByName(validation.data.name);
         if (existing) {
             return NextResponse.json({ error: "Category with this name already exists" }, { status: 409 });
         }
 
-        const category = await CategoryService.create(name);
+        const category = await CategoryService.create(validation.data.name);
         return NextResponse.json(category, { status: 201 });
     } catch (error) {
         console.error("Error creating category:", error);
@@ -53,11 +58,11 @@ export async function createCategory(request: NextRequest): Promise<NextResponse
 
 export async function updateCategory(request: NextRequest, id: string): Promise<NextResponse> {
     try {
-        const body: UpdateCategoryRequest = await request.json();
-        const { name } = body;
-
-        if (!name) {
-            return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+        const body = await request.json();
+        const validation = validateRequest(updateCategorySchema, body);
+        
+        if (!validation.success) {
+            return validation.error;
         }
 
         const existing = await CategoryService.getById(id);
@@ -65,12 +70,16 @@ export async function updateCategory(request: NextRequest, id: string): Promise<
             return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
-        const duplicate = await CategoryService.findDuplicateByName(name, id);
+        if (!validation.data.name) {
+            return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+        }
+
+        const duplicate = await CategoryService.findDuplicateByName(validation.data.name, id);
         if (duplicate) {
             return NextResponse.json({ error: "Category with this name already exists" }, { status: 409 });
         }
 
-        const updated = await CategoryService.update(id, name);
+        const updated = await CategoryService.update(id, validation.data.name);
         return NextResponse.json(updated);
     } catch (error) {
         console.error("Error updating category:", error);

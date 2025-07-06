@@ -3,6 +3,10 @@ import {
     Category, 
     CategoryServiceInterface 
 } from "@/types/categories";
+import { 
+    CreateCategoryRequest, 
+    UpdateCategoryRequest 
+} from "@/backend/validations/schemas/categories";
 
 export const CategoryService: CategoryServiceInterface = {
     async getAll(): Promise<Category[]> {
@@ -51,6 +55,10 @@ export const CategoryService: CategoryServiceInterface = {
     async findByName(name: string): Promise<Category | null> {
         return prisma.category.findFirst({
             where: { name: name.trim() },
+            include: {
+                products: true,
+                menuItems: true,
+            },
         });
     },
 
@@ -59,6 +67,10 @@ export const CategoryService: CategoryServiceInterface = {
             where: {
                 name: name.trim(),
                 id: { not: excludeId },
+            },
+            include: {
+                products: true,
+                menuItems: true,
             },
         });
     },
