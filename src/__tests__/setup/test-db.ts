@@ -62,22 +62,25 @@ export const testDb = {
   },
 }
 
-// Global test setup and teardown
-beforeAll(async () => {
-  try {
-    await testDb.init()
-  } catch (error) {
-    console.error('Test setup failed:', error)
-    // Continue with tests even if database setup fails
-  }
-})
+// Only run database setup if we're in a test environment
+if (process.env.NODE_ENV === 'test') {
+  // Global test setup and teardown
+  beforeAll(async () => {
+    try {
+      await testDb.init()
+    } catch (error) {
+      console.error('Test setup failed:', error)
+      // Continue with tests even if database setup fails
+    }
+  })
 
-afterAll(async () => {
-  await testDb.cleanup()
-  await testDb.disconnect()
-})
+  afterAll(async () => {
+    await testDb.cleanup()
+    await testDb.disconnect()
+  })
 
-// Add back afterEach cleanup for proper test isolation
-afterEach(async () => {
-  await testDb.cleanup()
-}) 
+  // Add back afterEach cleanup for proper test isolation
+  afterEach(async () => {
+    await testDb.cleanup()
+  })
+} 
