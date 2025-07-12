@@ -1,8 +1,10 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Package, Menu, Tag, HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { productApi, categoryApi, menuItemApi, faqApi } from "@/lib/api"
 
 interface AdminSidebarProps {
     activeSection: string
@@ -37,6 +39,41 @@ const navigationItems = [
 ]
 
 export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarProps) {
+    const [stats, setStats] = useState({
+        products: 0,
+        menuItems: 0,
+        categories: 0,
+        faqs: 0,
+    })
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchStats() {
+            try {
+                setLoading(true)
+                const [products, menuItems, categories, faqs] = await Promise.all([
+                    productApi.getAll(),
+                    menuItemApi.getAll(),
+                    categoryApi.getAll(),
+                    faqApi.getAll(),
+                ])
+
+                setStats({
+                    products: Array.isArray(products) ? products.length : 0,
+                    menuItems: Array.isArray(menuItems) ? menuItems.length : 0,
+                    categories: Array.isArray(categories) ? categories.length : 0,
+                    faqs: Array.isArray(faqs) ? faqs.length : 0,
+                })
+            } catch (error) {
+                console.error("Failed to fetch stats:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchStats()
+    }, [])
+
     return (
         <aside className="fixed left-0 top-[73px] h-[calc(100vh-73px)] w-64 bg-white border-r border-sage/20 shadow-sm">
         <div className="p-6">
@@ -76,15 +113,27 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
             <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                 <span className="text-chocolate/70">Total Products</span>
-                <span className="font-medium text-chocolate">24</span>
+                <span className="font-medium text-chocolate">
+                    {loading ? "..." : stats.products}
+                </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                 <span className="text-chocolate/70">Menu Items</span>
-                <span className="font-medium text-chocolate">18</span>
+                <span className="font-medium text-chocolate">
+                    {loading ? "..." : stats.menuItems}
+                </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                 <span className="text-chocolate/70">Categories</span>
-                <span className="font-medium text-chocolate">6</span>
+                <span className="font-medium text-chocolate">
+                    {loading ? "..." : stats.categories}
+                </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                <span className="text-chocolate/70">FAQs</span>
+                <span className="font-medium text-chocolate">
+                    {loading ? "..." : stats.faqs}
+                </span>
                 </div>
             </div>
             </div>
