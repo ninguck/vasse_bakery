@@ -7,7 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import { ImageUpload } from "@/components/ui/image-upload"
+import { GalleryUpload } from "@/components/ui/gallery-upload"
 import { productApi, categoryApi } from "@/lib/api"
+import { testSupabaseConnection } from "@/lib/supabase"
 import { Product } from "@/types/products"
 import { Category } from "@/types/categories"
 import { toast } from "sonner"
@@ -112,36 +115,49 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             </div>
             <div className="space-y-2">
             <Label htmlFor="mainImageUrl" className="text-chocolate">
-                Main Image URL
+                Main Image
             </Label>
-            <Input
-                id="mainImageUrl"
+            <div className="flex items-center space-x-2 mb-2">
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                        const result = await testSupabaseConnection()
+                        if (result.success) {
+                            toast.success("Supabase connection successful!")
+                        } else {
+                            toast.error(`Connection failed: ${result.error}`)
+                        }
+                    }}
+                    className="text-xs"
+                >
+                    Test Supabase Connection
+                </Button>
+            </div>
+            <ImageUpload
                 value={formData.mainImageUrl}
-                onChange={(e) => setFormData({ ...formData, mainImageUrl: e.target.value })}
-                placeholder="Enter main image URL"
-                className="border-sage/20 focus:border-caramel"
-                required
+                onChange={(url) => setFormData({ ...formData, mainImageUrl: url })}
+                onRemove={() => setFormData({ ...formData, mainImageUrl: "" })}
+                placeholder="Upload main product image"
+                disabled={loading}
             />
             </div>
         </div>
 
         <div className="space-y-2">
             <Label htmlFor="galleryImageUrls" className="text-chocolate">
-                Gallery Image URLs (Optional)
+                Gallery Images (Optional)
             </Label>
-            <Textarea
-                id="galleryImageUrls"
-                value={formData.galleryImageUrls.join('\n')}
-                onChange={(e) => setFormData({ 
-                    ...formData, 
-                    galleryImageUrls: e.target.value.split('\n').filter(url => url.trim() !== '')
-                })}
-                placeholder="Enter gallery image URLs, one per line"
-                className="border-sage/20 focus:border-caramel"
-                rows={3}
+            <GalleryUpload
+                value={formData.galleryImageUrls}
+                onChange={(urls) => setFormData({ ...formData, galleryImageUrls: urls })}
+                placeholder="Upload additional product images"
+                disabled={loading}
+                maxImages={5}
             />
             <p className="text-xs text-chocolate/60">
-                Add additional image URLs for the product gallery, one per line
+                Add up to 5 additional images for the product gallery
             </p>
         </div>
 

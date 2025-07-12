@@ -35,7 +35,6 @@ export function AdminHeader() {
                 <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2 hover:bg-beige/30">
                     <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" />
                     <AvatarFallback className="bg-caramel text-white">AB</AvatarFallback>
                     </Avatar>
                     <span className="text-chocolate font-medium">Admin Baker</span>
