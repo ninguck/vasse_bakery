@@ -271,7 +271,7 @@ describe('Validation Utils', () => {
       const validData = {
         title: 'Test Product',
         description: 'Test description',
-        imageUrl: 'https://example.com/image.jpg'
+        mainImageUrl: 'https://example.com/image.jpg'
       }
       
       const result = validateRequest(createProductSchema, validData)
@@ -284,7 +284,7 @@ describe('Validation Utils', () => {
       const invalidData = {
         title: '', // Empty title
         description: 'Test description',
-        imageUrl: 'not-a-url' // Invalid URL
+        mainImageUrl: 'not-a-url' // Invalid URL
       }
       
       const result = validateRequest(createProductSchema, invalidData)

@@ -43,7 +43,7 @@ describe('Simple Database Tests', () => {
       data: {
         title: 'Test Product',
         description: 'Test Description',
-        imageUrl: 'https://example.com/image.jpg',
+        mainImageUrl: 'https://example.com/image.jpg',
       },
     })
     

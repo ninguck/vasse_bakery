@@ -96,7 +96,7 @@ export interface Product {
     id: string
     title: string
     description: string
-    imageUrl: string
+    mainImageUrl: string
     badgeText?: string
     badgeColor?: string
     badgeIcon?: string

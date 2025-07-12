@@ -23,7 +23,7 @@ describe('Zod Schema Validation', () => {
         const validData = {
           title: 'Chocolate Cake',
           description: 'Delicious chocolate cake with rich frosting',
-          imageUrl: 'https://example.com/chocolate-cake.jpg',
+          mainImageUrl: 'https://example.com/chocolate-cake.jpg',
           badgeText: 'New',
           badgeColor: '#FF0000',
           badgeIcon: 'star',
@@ -40,7 +40,7 @@ describe('Zod Schema Validation', () => {
         const validData = {
           title: 'Vanilla Cake',
           description: 'Classic vanilla cake',
-          imageUrl: 'https://example.com/vanilla-cake.jpg'
+          mainImageUrl: 'https://example.com/vanilla-cake.jpg'
         }
         const result = createProductSchema.safeParse(validData)
         expect(result.success).toBe(true)
@@ -52,7 +52,7 @@ describe('Zod Schema Validation', () => {
       it('should reject missing required fields', () => {
         const invalidData = {
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         const result = createProductSchema.safeParse(invalidData)
         expect(result.success).toBe(false)
@@ -67,7 +67,7 @@ describe('Zod Schema Validation', () => {
         const invalidData = {
           title: '',
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         const result = createProductSchema.safeParse(invalidData)
         expect(result.success).toBe(false)
@@ -80,7 +80,7 @@ describe('Zod Schema Validation', () => {
         const invalidData = {
           title: 'A'.repeat(101),
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         const result = createProductSchema.safeParse(invalidData)
         expect(result.success).toBe(false)
@@ -93,7 +93,7 @@ describe('Zod Schema Validation', () => {
         const invalidData = {
           title: 'Test Product',
           description: 'Test description',
-          imageUrl: 'not-a-valid-url'
+          mainImageUrl: 'not-a-valid-url'
         }
         const result = createProductSchema.safeParse(invalidData)
         expect(result.success).toBe(false)
@@ -106,7 +106,7 @@ describe('Zod Schema Validation', () => {
         const invalidData = {
           title: 'Test Product',
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg',
+          mainImageUrl: 'https://example.com/image.jpg',
           categoryId: 'invalid-uuid'
         }
         const result = createProductSchema.safeParse(invalidData)
@@ -120,7 +120,7 @@ describe('Zod Schema Validation', () => {
         const validData = {
           title: 'Test Product',
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg',
+          mainImageUrl: 'https://example.com/image.jpg',
           categoryId: '123e4567-e89b-12d3-a456-426614174000'
         }
         const result = createProductSchema.safeParse(validData)
@@ -141,7 +141,7 @@ describe('Zod Schema Validation', () => {
         const fullData = {
           title: 'Updated Title',
           description: 'Updated description',
-          imageUrl: 'https://example.com/updated.jpg',
+          mainImageUrl: 'https://example.com/updated.jpg',
           badgeText: 'Updated',
           badgeColor: '#00FF00',
           badgeIcon: 'updated',
@@ -154,7 +154,7 @@ describe('Zod Schema Validation', () => {
       it('should reject invalid data even in partial updates', () => {
         const invalidData = {
           title: '',
-          imageUrl: 'invalid-url'
+          mainImageUrl: 'invalid-url'
         }
         const result = updateProductSchema.safeParse(invalidData)
         expect(result.success).toBe(false)

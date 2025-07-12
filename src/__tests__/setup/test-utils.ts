@@ -80,7 +80,7 @@ export const testUtils = {
     const defaultData = {
       title: 'Test Product',
       description: 'Test Description',
-      imageUrl: 'https://example.com/image.jpg',
+      mainImageUrl: 'https://example.com/image.jpg',
       ...data,
     }
     
@@ -146,12 +146,12 @@ export function validateProductResponse(product: any) {
   expect(product).toHaveProperty('id')
   expect(product).toHaveProperty('title')
   expect(product).toHaveProperty('description')
-  expect(product).toHaveProperty('imageUrl')
+  expect(product).toHaveProperty('mainImageUrl')
   expect(product).toHaveProperty('createdAt')
   expect(typeof product.id).toBe('string')
   expect(typeof product.title).toBe('string')
   expect(typeof product.description).toBe('string')
-  expect(typeof product.imageUrl).toBe('string')
+  expect(typeof product.mainImageUrl).toBe('string')
 }
 
 export function validateCategoryResponse(category: any) {

@@ -3,7 +3,8 @@ export interface Product {
     id: string;
     title: string;
     description: string;
-    imageUrl: string;
+    mainImageUrl: string;
+    galleryImageUrls: string[];
     badgeText: string | null;
     badgeColor: string | null;
     badgeIcon: string | null;
@@ -51,7 +52,8 @@ export interface MenuItem {
 export interface CreateProductRequest {
     title: string;
     description: string;
-    imageUrl: string;
+    mainImageUrl: string;
+    galleryImageUrls?: string[];
     badgeText?: string;
     badgeColor?: string;
     badgeIcon?: string;
@@ -61,7 +63,8 @@ export interface CreateProductRequest {
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {
     title?: string;
     description?: string;
-    imageUrl?: string;
+    mainImageUrl?: string;
+    galleryImageUrls?: string[];
     badgeText?: string;
     badgeColor?: string;
     badgeIcon?: string;

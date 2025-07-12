@@ -37,7 +37,7 @@ describe('Products API', () => {
       expect(product.id).toBeDefined()
       expect(product.title).toBe(productData.title)
       expect(product.description).toBe(productData.description)
-      expect(product.imageUrl).toBe(productData.imageUrl)
+      expect(product.mainImageUrl).toBe(productData.mainImageUrl)
       
       validateProductResponse(product)
     })
@@ -144,7 +144,7 @@ describe('Products API', () => {
       expect(updatedProduct.id).toBe(product.id)
       expect(updatedProduct.title).toBe(updateData.title)
       expect(updatedProduct.description).toBe(updateData.description)
-      expect(updatedProduct.imageUrl).toBe(updateData.imageUrl)
+      expect(updatedProduct.mainImageUrl).toBe(updateData.mainImageUrl)
       
       validateProductResponse(updatedProduct)
     })

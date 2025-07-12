@@ -260,7 +260,7 @@ export function ProductManagement() {
                         <TableCell>
                         <div className="flex items-center space-x-3">
                             <img
-                            src={product.imageUrl || "/placeholder.svg"}
+                            src={product.mainImageUrl || "/placeholder.svg"}
                             alt={product.title}
                             className="w-12 h-12 rounded-lg object-cover border border-sage/20"
                             />

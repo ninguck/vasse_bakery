@@ -5,7 +5,7 @@ export const fixtures = {
     valid: {
       title: 'Chocolate Cake',
       description: 'Delicious chocolate cake with rich frosting',
-      imageUrl: 'https://example.com/chocolate-cake.jpg',
+      mainImageUrl: 'https://example.com/chocolate-cake.jpg',
     },
     invalid: {
       title: '', // Missing required field
@@ -14,7 +14,7 @@ export const fixtures = {
     update: {
       title: 'Updated Chocolate Cake',
       description: 'Updated description',
-      imageUrl: 'https://example.com/updated-cake.jpg',
+      mainImageUrl: 'https://example.com/updated-cake.jpg',
     },
   },
 
@@ -71,17 +71,17 @@ export const fixtures = {
       {
         title: 'Vanilla Cake',
         description: 'Classic vanilla cake',
-        imageUrl: 'https://example.com/vanilla-cake.jpg',
+        mainImageUrl: 'https://example.com/vanilla-cake.jpg',
       },
       {
         title: 'Strawberry Cake',
         description: 'Fresh strawberry cake',
-        imageUrl: 'https://example.com/strawberry-cake.jpg',
+        mainImageUrl: 'https://example.com/strawberry-cake.jpg',
       },
       {
         title: 'Carrot Cake',
         description: 'Healthy carrot cake',
-        imageUrl: 'https://example.com/carrot-cake.jpg',
+        mainImageUrl: 'https://example.com/carrot-cake.jpg',
       },
     ],
     categories: [

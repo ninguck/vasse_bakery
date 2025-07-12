@@ -39,7 +39,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     const [formData, setFormData] = useState({
         title: product?.title || "",
         description: product?.description || "",
-        imageUrl: product?.imageUrl || "",
+        mainImageUrl: product?.mainImageUrl || "",
+        galleryImageUrls: product?.galleryImageUrls || [],
         categoryId: product?.categoryId || "",
         badgeText: product?.badgeText || "",
         badgeColor: product?.badgeColor || "#E6C366",
@@ -110,18 +111,38 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             />
             </div>
             <div className="space-y-2">
-            <Label htmlFor="imageUrl" className="text-chocolate">
-                Image URL
+            <Label htmlFor="mainImageUrl" className="text-chocolate">
+                Main Image URL
             </Label>
             <Input
-                id="imageUrl"
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="Enter image URL"
+                id="mainImageUrl"
+                value={formData.mainImageUrl}
+                onChange={(e) => setFormData({ ...formData, mainImageUrl: e.target.value })}
+                placeholder="Enter main image URL"
                 className="border-sage/20 focus:border-caramel"
                 required
             />
             </div>
+        </div>
+
+        <div className="space-y-2">
+            <Label htmlFor="galleryImageUrls" className="text-chocolate">
+                Gallery Image URLs (Optional)
+            </Label>
+            <Textarea
+                id="galleryImageUrls"
+                value={formData.galleryImageUrls.join('\n')}
+                onChange={(e) => setFormData({ 
+                    ...formData, 
+                    galleryImageUrls: e.target.value.split('\n').filter(url => url.trim() !== '')
+                })}
+                placeholder="Enter gallery image URLs, one per line"
+                className="border-sage/20 focus:border-caramel"
+                rows={3}
+            />
+            <p className="text-xs text-chocolate/60">
+                Add additional image URLs for the product gallery, one per line
+            </p>
         </div>
 
         <div className="space-y-2">
