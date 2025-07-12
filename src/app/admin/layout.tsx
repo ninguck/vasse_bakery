@@ -5,6 +5,7 @@ import { useState } from "react"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminSidebar } from "@/components/admin/admin-sidebare"
 import { ProductManagement } from "@/components/admin/product-management"
+import { MenuItemManagement } from "@/components/admin/menu-item-management"
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const [activeSection, setActiveSection] = useState("products")
@@ -14,17 +15,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             case "products":
                 return <ProductManagement />
             case "menu-items":
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-chocolate">Menu Items</h1>
-                            <p className="text-chocolate/70 mt-1">Manage your menu offerings</p>
-                        </div>
-                        <div className="bg-white border-sage/20 rounded-lg p-6">
-                            <p className="text-chocolate/70">Menu items management coming soon...</p>
-                        </div>
-                    </div>
-                )
+                return <MenuItemManagement />
             case "categories":
                 return (
                     <div className="space-y-6">

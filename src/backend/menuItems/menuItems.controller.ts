@@ -44,8 +44,14 @@ export async function createMenuItem(request: NextRequest): Promise<NextResponse
             return validation.error;
         }
 
+        // For creates, require at least one link
         if (!validation.data.productId && !validation.data.categoryId) {
             return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
+        }
+
+        // Prevent linking to both product and category
+        if (validation.data.productId && validation.data.categoryId) {
+            return NextResponse.json({ error: "Cannot link to both product and category" }, { status: 400 });
         }
 
         if (validation.data.productId) {
@@ -79,8 +85,10 @@ export async function updateMenuItem(request: NextRequest, id: string): Promise<
         const existing = await MenuItemService.getById(id);
         if (!existing) return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
 
-        if (!validation.data.productId && !validation.data.categoryId) {
-            return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
+        // For updates, allow removing links (setting both to null)
+        // Only validate if both are being set to non-null values
+        if (validation.data.productId && validation.data.categoryId) {
+            return NextResponse.json({ error: "Cannot link to both product and category" }, { status: 400 });
         }
 
         if (validation.data.productId) {
