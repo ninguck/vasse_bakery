@@ -7,6 +7,7 @@ import { AdminSidebar } from "@/components/admin/admin-sidebare"
 import { ProductManagement } from "@/components/admin/product-management"
 import { MenuItemManagement } from "@/components/admin/menu-item-management"
 import { CategoryManagement } from "@/components/admin/category-management"
+import { FAQManagement } from "@/components/admin/faq-management"
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const [activeSection, setActiveSection] = useState("products")
@@ -20,17 +21,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             case "categories":
                 return <CategoryManagement />
             case "faqs":
-                return (
-                    <div className="space-y-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-chocolate">FAQs</h1>
-                            <p className="text-chocolate/70 mt-1">Manage customer questions</p>
-                        </div>
-                        <div className="bg-white border-sage/20 rounded-lg p-6">
-                            <p className="text-chocolate/70">FAQ management coming soon...</p>
-                        </div>
-                    </div>
-                )
+                return <FAQManagement />
             default:
                 return (
                     <div className="space-y-6">
