@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { Upload, X, Image as ImageIcon } from "lucide-react"
+import { Upload, X, Image as ImageIcon, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { uploadImage, UploadResult } from "@/lib/supabase"
 import { toast } from "sonner"
@@ -41,7 +41,7 @@ export function ImageUpload({
 
       if (result.url) {
         onChange(result.url)
-        toast.success("Image uploaded successfully")
+        toast.success(value ? "Image replaced successfully" : "Image uploaded successfully")
       }
     } catch (error) {
       console.error("Upload error:", error)
@@ -49,7 +49,7 @@ export function ImageUpload({
     } finally {
       setUploading(false)
     }
-  }, [onChange])
+  }, [onChange, value])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -69,18 +69,36 @@ export function ImageUpload({
             alt="Uploaded image"
             className="w-full h-48 object-cover rounded-lg border border-sage/20"
           />
-          {onRemove && (
+          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {onRemove && (
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={onRemove}
+                disabled={disabled}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
             <Button
               type="button"
-              variant="destructive"
+              variant="secondary"
               size="sm"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={onRemove}
-              disabled={disabled}
+              onClick={() => document.getElementById(`replace-input-${value}`)?.click()}
+              disabled={disabled || uploading}
             >
-              <X className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4" />
             </Button>
-          )}
+          </div>
+          {/* Hidden dropzone for replacement */}
+          <div
+            {...getRootProps()}
+            className="absolute inset-0 cursor-pointer"
+            style={{ pointerEvents: disabled || uploading ? 'none' : 'auto' }}
+          >
+            <input {...getInputProps()} id={`replace-input-${value}`} />
+          </div>
         </div>
       ) : (
         <div
