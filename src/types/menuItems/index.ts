@@ -55,16 +55,16 @@ export interface CreateMenuItemRequest {
     name: string;
     description: string;
     price: number;
-    productId?: string;
-    categoryId?: string;
+    productId?: string | null;
+    categoryId?: string | null;
 }
 
 export interface UpdateMenuItemRequest extends Partial<CreateMenuItemRequest> {
     name?: string;
     description?: string;
     price?: number;
-    productId?: string;
-    categoryId?: string;
+    productId?: string | null;
+    categoryId?: string | null;
 }
 
 // Menu Item Response Types

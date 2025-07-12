@@ -118,8 +118,8 @@ export interface MenuItem {
     name: string
     description: string
     price: number
-    productId?: string
-    categoryId?: string
+    productId?: string | null
+    categoryId?: string | null
     product?: Product
     category?: Category
 }
