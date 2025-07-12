@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { GalleryUpload } from "@/components/ui/gallery-upload"
 import { productApi, categoryApi } from "@/lib/api"
-import { testSupabaseConnection } from "@/lib/supabase"
+
 import { Product } from "@/types/products"
 import { Category } from "@/types/categories"
 import { toast } from "sonner"
@@ -117,24 +117,6 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             <Label htmlFor="mainImageUrl" className="text-chocolate">
                 Main Image
             </Label>
-            <div className="flex items-center space-x-2 mb-2">
-                <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={async () => {
-                        const result = await testSupabaseConnection()
-                        if (result.success) {
-                            toast.success("Supabase connection successful!")
-                        } else {
-                            toast.error(`Connection failed: ${result.error}`)
-                        }
-                    }}
-                    className="text-xs"
-                >
-                    Test Supabase Connection
-                </Button>
-            </div>
             <ImageUpload
                 value={formData.mainImageUrl}
                 onChange={(url) => setFormData({ ...formData, mainImageUrl: url })}
