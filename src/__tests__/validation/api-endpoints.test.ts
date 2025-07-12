@@ -70,7 +70,7 @@ describe('API Endpoint Validation', () => {
         const validData = {
           title: 'Test Product',
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         
         const request = createMockRequest('POST', validData)
@@ -82,7 +82,7 @@ describe('API Endpoint Validation', () => {
       it('should reject product with missing title', async () => {
         const invalidData = {
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         
         const request = createMockRequest('POST', invalidData)
@@ -98,7 +98,7 @@ describe('API Endpoint Validation', () => {
         const invalidData = {
           title: 'Test Product',
           description: 'Test description',
-          imageUrl: 'not-a-valid-url'
+          mainImageUrl: 'not-a-valid-url'
         }
         
         const request = createMockRequest('POST', invalidData)
@@ -107,14 +107,14 @@ describe('API Endpoint Validation', () => {
         expect(response.status).toBe(400)
         const body = await response.json()
         expect(body.error).toBe('Validation failed')
-        expect(body.details.some((error: any) => error.field === 'imageUrl')).toBe(true)
+        expect(body.details.some((error: any) => error.field === 'mainImageUrl')).toBe(true)
       })
 
       it('should reject product with empty title', async () => {
         const invalidData = {
           title: '',
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         
         const request = createMockRequest('POST', invalidData)
@@ -130,7 +130,7 @@ describe('API Endpoint Validation', () => {
         const invalidData = {
           title: 'A'.repeat(101), // Over 100 characters
           description: 'Test description',
-          imageUrl: 'https://example.com/image.jpg'
+          mainImageUrl: 'https://example.com/image.jpg'
         }
         
         const request = createMockRequest('POST', invalidData)
@@ -158,7 +158,7 @@ describe('API Endpoint Validation', () => {
 
       it('should reject update with invalid image URL', async () => {
         const invalidData = {
-          imageUrl: 'invalid-url'
+          mainImageUrl: 'invalid-url'
         }
         
         const request = createMockRequest('PUT', invalidData)
@@ -167,7 +167,7 @@ describe('API Endpoint Validation', () => {
         expect(response.status).toBe(400)
         const body = await response.json()
         expect(body.error).toBe('Validation failed')
-        expect(body.details.some((error: any) => error.field === 'imageUrl')).toBe(true)
+        expect(body.details.some((error: any) => error.field === 'mainImageUrl')).toBe(true)
       })
     })
   })

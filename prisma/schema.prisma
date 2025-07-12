@@ -15,17 +15,18 @@ datasource db {
 
 
 model Product {
-  id          String     @id @default(uuid())
-  title       String
-  description String
-  imageUrl    String
-  badgeText   String?
-  badgeColor  String?
-  badgeIcon   String?
-  category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  menuItems   MenuItem[]
-  createdAt   DateTime   @default(now())
+  id                String     @id @default(uuid())
+  title             String
+  description       String
+  mainImageUrl      String
+  galleryImageUrls  String[]   @default([])
+  badgeText         String?
+  badgeColor        String?
+  badgeIcon         String?
+  category          Category?  @relation(fields: [categoryId], references: [id])
+  categoryId        String?
+  menuItems         MenuItem[]
+  createdAt         DateTime   @default(now())
 }
 
 model MenuItem {
