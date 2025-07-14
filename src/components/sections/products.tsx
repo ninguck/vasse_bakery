@@ -16,6 +16,7 @@ import Image from "next/image"
 import { PRODUCT_DETAILS } from "@/lib/data"
 import { containerVariants, itemVariants, modalVariants } from "@/lib/animations"
 import { CroissantIcon } from "lucide-react"
+import { useProducts } from "@/hooks/useProducts";
 
 interface ProductsSectionProps {
   selectedProduct: string | null
@@ -25,13 +26,16 @@ interface ProductsSectionProps {
 }
 
 export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu, setShowMenu }: ProductsSectionProps) {
-  const products = [
+  const { products, isLoading, error } = useProducts();
+
+  // Fallback to old hardcoded products if no data
+  const fallbackProducts = [
     {
       key: "pies",
       title: "Artisanal Pies",
       description: "Savory and sweet pies made with premium ingredients and traditional recipes.",
       image: "/placeholder.svg?height=250&width=300&text=Fresh Pies",
-      badge: { icon: PieChart, text: "Pies", color: "bg-caramel" },
+      badge: { text: "Pies", color: "bg-caramel" },
     },
     {
       key: "pastries",
@@ -69,6 +73,39 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
       badge: { text: "Sushi & Rolls", color: "bg-sage" },
     },
   ]
+
+  // Map backend products to the format expected by the carousel
+  const mappedProducts = products?.map((product) => ({
+    key: product.id,
+    title: product.title,
+    description: product.description,
+    image: product.mainImageUrl || "/placeholder.svg?height=250&width=300&text=Product",
+    badge: {
+      text: product.badgeText || "Product",
+      color: product.badgeColor ? `bg-[${product.badgeColor}]` : "bg-caramel",
+      // Optionally add icon logic if you want to map badgeIcon
+    },
+  })) || fallbackProducts;
+
+  if (isLoading) {
+    return (
+      <section id="products" className="py-12 sm:py-16 lg:py-20 bg-beige/30">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-chocolate text-lg">Loading products...</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="products" className="py-12 sm:py-16 lg:py-20 bg-beige/30">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-red-600 text-lg">Failed to load products.</div>
+        </div>
+      </section>
+    );
+  }
 
   const fullMenu = {
     "Fresh Baked Daily": [
@@ -133,7 +170,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
         >
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 sm:-ml-4">
-              {products.map((product, index) => (
+              {mappedProducts.map((product, index) => (
                 <CarouselItem key={product.key} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                   <motion.div
                     initial={{ y: 50, opacity: 0 }}
@@ -165,7 +202,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                           transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
                           className={`absolute top-3 left-3 sm:top-4 sm:left-4 ${product.badge.color} text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium`}
                         >
-                          {product.badge.icon && <product.badge.icon className="inline h-3 w-3 sm:h-4 sm:w-4 mr-1" />}
+                          {/* Optionally add icon here if you want */}
                           {product.badge.text}
                         </motion.div>
                       </div>
