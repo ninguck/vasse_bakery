@@ -17,6 +17,7 @@ import { PRODUCT_DETAILS } from "@/lib/data"
 import { containerVariants, itemVariants, modalVariants } from "@/lib/animations"
 import { CroissantIcon } from "lucide-react"
 import { useProducts } from "@/hooks/useProducts";
+import { badgeColorClassMap } from "@/lib/badgeColors";
 
 interface ProductsSectionProps {
   selectedProduct: string | null
@@ -82,7 +83,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
     image: product.mainImageUrl || "/placeholder.svg?height=250&width=300&text=Product",
     badge: {
       text: product.badgeText || "Product",
-      color: product.badgeColor ? `bg-[${product.badgeColor}]` : "bg-caramel",
+      color: badgeColorClassMap[product.badgeColor || "caramel"],
       // Optionally add icon logic if you want to map badgeIcon
     },
   })) || fallbackProducts;

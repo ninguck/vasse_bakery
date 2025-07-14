@@ -22,11 +22,11 @@ interface ProductFormProps {
 }
 
 const badgeColors = [
-    { name: "Wheat", value: "#E6C366" },
-    { name: "Sage", value: "#C4D5BE" },
-    { name: "Caramel", value: "#D6A77A" },
-    { name: "Beige", value: "#F5EBDD" },
-    { name: "Chocolate", value: "#5C3A21" },
+    { name: "Caramel", value: "caramel", hex: "#D6A77A" },
+    { name: "Sage", value: "sage", hex: "#C4D5BE" },
+    { name: "Chocolate", value: "chocolate", hex: "#5C3A21" },
+    { name: "Beige", value: "beige", hex: "#F5EBDD" },
+    { name: "Cream", value: "cream", hex: "#FFFFFF" },
 ]
 
 const badgeIcons = [
@@ -235,7 +235,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 >
                     <div
                     className="w-6 h-6 rounded-full border border-chocolate/20"
-                    style={{ backgroundColor: color.value }}
+                    style={{ backgroundColor: color.hex }}
                     />
                 </button>
                 ))}
@@ -247,12 +247,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 <Label className="text-chocolate text-sm">Badge Preview</Label>
                 <div>
                 <Badge
-                    style={{
-                    backgroundColor: formData.badgeColor + "20",
-                    color: formData.badgeColor,
-                    border: `1px solid ${formData.badgeColor}40`,
-                    }}
-                    className="text-sm"
+                    className={`text-sm bg-${formData.badgeColor}`}
                 >
                     {renderBadgeIcon(formData.badgeIcon)} {formData.badgeText}
                 </Badge>
