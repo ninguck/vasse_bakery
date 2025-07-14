@@ -263,13 +263,29 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                       transition={{ duration: 0.4, delay: 0.1 }}
                       className="relative overflow-hidden rounded-xl"
                     >
-                      <Image
-                        src={selectedProductObj?.mainImageUrl || "/placeholder.svg?height=300&width=500"}
-                        alt={selectedProductObj?.title || "Product"}
-                        width={500}
-                        height={300}
-                        className="w-full h-48 sm:h-64 object-cover"
-                      />
+                      <Carousel className="w-full">
+                        <CarouselContent className="flex gap-4">
+                          {[selectedProductObj?.mainImageUrl, ...(selectedProductObj?.galleryImageUrls || [])]
+                            .filter(Boolean)
+                            .map((imgUrl, idx) => (
+                              <CarouselItem key={imgUrl || idx} className="!basis-auto">
+                                <div className="w-48 h-48 sm:w-64 sm:h-64 bg-beige/30 rounded-lg flex items-center justify-center overflow-hidden border border-sage/20">
+                                  <Image
+                                    src={imgUrl || "/placeholder.svg?height=300&width=500"}
+                                    alt={selectedProductObj?.title || "Product"}
+                                    width={256}
+                                    height={256}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <div className="flex justify-center mt-2 space-x-2">
+                          <CarouselPrevious />
+                          <CarouselNext />
+                        </div>
+                      </Carousel>
                     </motion.div>
                     <div className="space-y-4">
                       <h4 className="text-base sm:text-lg font-semibold text-chocolate">Menu Items:</h4>

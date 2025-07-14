@@ -12,6 +12,7 @@ export const createProductSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
   description: z.string().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
   mainImageUrl: z.string().url("Valid image URL is required"),
+  galleryImageUrls: z.array(z.string().url()).optional(),
   badgeText: z.string().optional(),
   badgeColor: z.enum(allowedBadgeColors).optional(),
   badgeIcon: z.string().optional(),
