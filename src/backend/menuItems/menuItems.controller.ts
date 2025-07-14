@@ -45,13 +45,8 @@ export async function createMenuItem(request: NextRequest): Promise<NextResponse
         }
 
         // For creates, require at least one link
-        if (!validation.data.productId && !validation.data.categoryId) {
-            return NextResponse.json({ error: "Either productId or categoryId must be provided" }, { status: 400 });
-        }
-
-        // Prevent linking to both product and category
-        if (validation.data.productId && validation.data.categoryId) {
-            return NextResponse.json({ error: "Cannot link to both product and category" }, { status: 400 });
+        if (!validation.data.categoryId) {
+            return NextResponse.json({ error: "categoryId must be provided" }, { status: 400 });
         }
 
         if (validation.data.productId) {
@@ -86,11 +81,7 @@ export async function updateMenuItem(request: NextRequest, id: string): Promise<
         if (!existing) return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
 
         // For updates, allow removing links (setting both to null)
-        // Only validate if both are being set to non-null values
-        if (validation.data.productId && validation.data.categoryId) {
-            return NextResponse.json({ error: "Cannot link to both product and category" }, { status: 400 });
-        }
-
+        // No restriction: allow both productId and categoryId to be set
         if (validation.data.productId) {
             const product = await prisma.product.findUnique({ where: { id: validation.data.productId } });
             if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });

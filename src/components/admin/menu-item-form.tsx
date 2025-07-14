@@ -28,7 +28,6 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
         name: menuItem?.name || "",
         description: menuItem?.description || "",
         price: menuItem?.price?.toString() || "",
-        linkType: menuItem?.productId ? "product" : menuItem?.categoryId ? "category" : "none",
         linkedProductId: menuItem?.productId || "",
         linkedCategoryId: menuItem?.categoryId || "",
     })
@@ -51,53 +50,43 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
         fetchData()
     }, [])
 
-      const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setLoading(true)
 
-    try {
-      // Prepare the data for API
-      const apiData = {
-        name: formData.name,
-        description: formData.description,
-        price: parseFloat(formData.price),
-        productId: formData.linkType === "product" ? formData.linkedProductId : null,
-        categoryId: formData.linkType === "category" ? formData.linkedCategoryId : null,
-      }
+        if (!formData.linkedCategoryId) {
+            toast.error("Please select a category for this menu item.")
+            setLoading(false)
+            return
+        }
 
-      // For new menu items, require at least one link
-      if (!menuItem && formData.linkType === "none") {
-        toast.error("Please link to a product or category")
-        setLoading(false)
-        return
-      }
+        try {
+            // Prepare the data for API
+            const apiData = {
+                name: formData.name,
+                description: formData.description,
+                price: parseFloat(formData.price),
+                productId: formData.linkedProductId || null,
+                categoryId: formData.linkedCategoryId,
+            }
 
-      let newMenuItem: MenuItem
-      if (menuItem) {
-        newMenuItem = await menuItemApi.update(menuItem.id, apiData) as MenuItem
-        toast.success("Menu item updated successfully")
-      } else {
-        newMenuItem = await menuItemApi.create(apiData) as MenuItem
-        toast.success("Menu item created successfully")
-      }
+            let newMenuItem: MenuItem
+            if (menuItem) {
+                newMenuItem = await menuItemApi.update(menuItem.id, apiData) as MenuItem
+                toast.success("Menu item updated successfully")
+            } else {
+                newMenuItem = await menuItemApi.create(apiData) as MenuItem
+                toast.success("Menu item created successfully")
+            }
 
-      onSuccess?.(newMenuItem)
-      onClose()
-    } catch (error: any) {
-      console.error("Failed to save menu item:", error)
-      toast.error(error.message || "Failed to save menu item")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-    const handleLinkTypeChange = (value: string) => {
-        setFormData({
-        ...formData,
-        linkType: value,
-        linkedProductId: "",
-        linkedCategoryId: "",
-        })
+            onSuccess?.(newMenuItem)
+            onClose()
+        } catch (error: any) {
+            console.error("Failed to save menu item:", error)
+            toast.error(error.message || "Failed to save menu item")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -149,53 +138,7 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
         </div>
 
         <div className="space-y-4 p-4 border border-sage/20 rounded-lg bg-beige/10">
-            <Label className="text-chocolate font-medium">Link to Product or Category</Label>
-
-            <RadioGroup value={formData.linkType} onValueChange={handleLinkTypeChange}>
-            <div className="flex items-center space-x-2">
-                <RadioGroupItem value="none" id="none" />
-                <Label htmlFor="none" className="text-chocolate">
-                No link
-                </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-                <RadioGroupItem value="product" id="product" />
-                <Label htmlFor="product" className="text-chocolate">
-                Link to a specific product
-                </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-                <RadioGroupItem value="category" id="category" />
-                <Label htmlFor="category" className="text-chocolate">
-                Link to a category
-                </Label>
-            </div>
-            </RadioGroup>
-
-            {formData.linkType === "product" && (
-            <div className="space-y-2">
-                <Label htmlFor="linkedProduct" className="text-chocolate">
-                Select Product
-                </Label>
-                <Select
-                value={formData.linkedProductId}
-                onValueChange={(value) => setFormData({ ...formData, linkedProductId: value })}
-                >
-                <SelectTrigger className="border-sage/20 focus:border-caramel">
-                    <SelectValue placeholder="Choose a product" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-sage/20">
-                    {products.map((product) => (
-                    <SelectItem key={product.id} value={product.id}>
-                        {product.title}
-                    </SelectItem>
-                    ))}
-                </SelectContent>
-                </Select>
-            </div>
-            )}
-
-            {formData.linkType === "category" && (
+            <Label className="text-chocolate font-medium">Link to Category (required)</Label>
             <div className="space-y-2">
                 <Label htmlFor="linkedCategory" className="text-chocolate">
                 Select Category
@@ -203,6 +146,7 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
                 <Select
                 value={formData.linkedCategoryId}
                 onValueChange={(value) => setFormData({ ...formData, linkedCategoryId: value })}
+                required
                 >
                 <SelectTrigger className="border-sage/20 focus:border-caramel">
                     <SelectValue placeholder="Choose a category" />
@@ -216,7 +160,26 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
                 </SelectContent>
                 </Select>
             </div>
-            )}
+            <div className="space-y-2">
+                <Label htmlFor="linkedProduct" className="text-chocolate">
+                Link to Product (optional)
+                </Label>
+                <Select
+                value={formData.linkedProductId}
+                onValueChange={(value) => setFormData({ ...formData, linkedProductId: value })}
+                >
+                <SelectTrigger className="border-sage/20 focus:border-caramel">
+                    <SelectValue placeholder="Choose a product (optional)" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-sage/20">
+                    {products.map((product) => (
+                    <SelectItem key={product.id} value={product.id}>
+                        {product.title}
+                    </SelectItem>
+                    ))}
+                </SelectContent>
+                </Select>
+            </div>
         </div>
 
         <div className="flex justify-end space-x-2 pt-4">
