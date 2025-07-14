@@ -88,6 +88,9 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
     },
   })) || fallbackProducts;
 
+  // Find the selected product from the fetched products
+  const selectedProductObj = products?.find(p => p.id === selectedProduct) || null;
+
   if (isLoading) {
     return (
       <section id="products" className="py-12 sm:py-16 lg:py-20 bg-beige/30">
@@ -247,10 +250,10 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                 <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit">
                   <DialogHeader>
                     <DialogTitle className="text-xl sm:text-2xl font-bold text-chocolate">
-                      {PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.title}
+                      {selectedProductObj?.title || "Product"}
                     </DialogTitle>
                     <DialogDescription className="text-sm sm:text-base text-chocolate/70">
-                      {PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.description}
+                      {selectedProductObj?.description || ""}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
@@ -261,39 +264,44 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                       className="relative overflow-hidden rounded-xl"
                     >
                       <Image
-                        src={PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.image || "/placeholder.svg?height=300&width=500"}
-                        alt={PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.title || "Product"}
+                        src={selectedProductObj?.mainImageUrl || "/placeholder.svg?height=300&width=500"}
+                        alt={selectedProductObj?.title || "Product"}
                         width={500}
                         height={300}
                         className="w-full h-48 sm:h-64 object-cover"
                       />
                     </motion.div>
                     <div className="space-y-4">
-                      <h4 className="text-base sm:text-lg font-semibold text-chocolate">Popular Items:</h4>
+                      <h4 className="text-base sm:text-lg font-semibold text-chocolate">Menu Items:</h4>
                       <motion.div
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
                         className="grid grid-cols-1 gap-3 sm:gap-4"
                       >
-                        {PRODUCT_DETAILS[selectedProduct as keyof typeof PRODUCT_DETAILS]?.items.map((item: { name: string; description: string }, index: number) => (
-                          <motion.div
-                            key={index}
-                            variants={itemVariants}
-                            whileHover={{ scale: 1.02, x: 5 }}
-                            className="flex items-center space-x-3 p-3 bg-beige/30 rounded-lg"
-                          >
+                        {selectedProductObj?.menuItems?.length ? (
+                          selectedProductObj.menuItems.map((item, index) => (
                             <motion.div
-                              animate={{ scale: [1, 1.2, 1] }}
-                              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: index * 0.2 }}
-                              className="w-2 h-2 bg-caramel rounded-full flex-shrink-0"
-                            />
-                            <div>
-                              <p className="font-medium text-chocolate text-sm sm:text-base">{item.name}</p>
-                              <p className="text-xs sm:text-sm text-chocolate/70">{item.description}</p>
-                            </div>
-                          </motion.div>
-                        ))}
+                              key={item.id}
+                              variants={itemVariants}
+                              whileHover={{ scale: 1.02, x: 5 }}
+                              className="flex items-center space-x-3 p-3 bg-beige/30 rounded-lg"
+                            >
+                              <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: index * 0.2 }}
+                                className="w-2 h-2 bg-caramel rounded-full flex-shrink-0"
+                              />
+                              <div>
+                                <p className="font-medium text-chocolate text-sm sm:text-base">{item.name}</p>
+                                <p className="text-xs sm:text-sm text-chocolate/70">{item.description}</p>
+                                <span className="font-bold text-caramel text-sm sm:text-base ml-2">${item.price}</span>
+                              </div>
+                            </motion.div>
+                          ))
+                        ) : (
+                          <div className="text-chocolate/60 text-sm">No menu items for this product.</div>
+                        )}
                       </motion.div>
                     </div>
                   </div>
