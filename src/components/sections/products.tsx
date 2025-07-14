@@ -288,37 +288,54 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                       </Carousel>
                     </motion.div>
                     <div className="space-y-4">
-                      <h4 className="text-base sm:text-lg font-semibold text-chocolate">Menu Items:</h4>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-base sm:text-lg font-semibold text-chocolate">Menu Items:</h4>
+                        {selectedProductObj?.menuItems && selectedProductObj.menuItems.length > 6 && (
+                          <span className="text-xs sm:text-sm text-chocolate/60 italic">
+                            Showing 6 of {selectedProductObj.menuItems.length}
+                          </span>
+                        )}
+                      </div>
                       <motion.div
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
-                        className="grid grid-cols-1 gap-3 sm:gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
                       >
-                        {selectedProductObj?.menuItems?.length ? (
-                          selectedProductObj.menuItems.map((item, index) => (
+                        {(selectedProductObj?.menuItems || []).slice(0, 6).map((item, index) => (
+                          <motion.div
+                            key={item.id}
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.02, x: 5 }}
+                            className="flex items-start space-x-3 p-3 bg-beige/30 rounded-lg"
+                          >
                             <motion.div
-                              key={item.id}
-                              variants={itemVariants}
-                              whileHover={{ scale: 1.02, x: 5 }}
-                              className="flex items-center space-x-3 p-3 bg-beige/30 rounded-lg"
-                            >
-                              <motion.div
-                                animate={{ scale: [1, 1.2, 1] }}
-                                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: index * 0.2 }}
-                                className="w-2 h-2 bg-caramel rounded-full flex-shrink-0"
-                              />
-                              <div>
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: index * 0.2 }}
+                              className="w-2 h-2 bg-caramel rounded-full flex-shrink-0 mt-2"
+                            />
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start mb-1">
                                 <p className="font-medium text-chocolate text-sm sm:text-base">{item.name}</p>
-                                <p className="text-xs sm:text-sm text-chocolate/70">{item.description}</p>
-                                <span className="font-bold text-caramel text-sm sm:text-base ml-2">${item.price}</span>
+                                <span className="font-bold text-caramel text-sm sm:text-base ml-2 flex-shrink-0">
+                                  ${item.price?.toFixed(2) ?? "-"}
+                                </span>
                               </div>
-                            </motion.div>
-                          ))
-                        ) : (
-                          <div className="text-chocolate/60 text-sm">No menu items for this product.</div>
-                        )}
+                              <p className="text-xs sm:text-sm text-chocolate/70">{item.description}</p>
+                            </div>
+                          </motion.div>
+                        ))}
                       </motion.div>
+                      {selectedProductObj?.menuItems && selectedProductObj.menuItems.length > 6 && (
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.5 }}
+                          className="text-center text-sm text-chocolate/60 italic"
+                        >
+                          View our full menu to see all {selectedProductObj.menuItems.length} items in this category
+                        </motion.p>
+                      )}
                     </div>
                   </div>
                   <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0">
