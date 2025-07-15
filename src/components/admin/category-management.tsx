@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { CategoryForm } from "./category-form"
+import { CategoryForm } from "@/components/admin/category-form"
 import { categoryApi } from "@/lib/api"
 import { Category } from "@/types/categories"
 import { toast } from "sonner"
