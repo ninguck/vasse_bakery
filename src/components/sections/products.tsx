@@ -17,6 +17,10 @@ import { PRODUCT_DETAILS } from "@/lib/data"
 import { containerVariants, itemVariants, modalVariants } from "@/lib/animations"
 import { CroissantIcon } from "lucide-react"
 import { useProducts } from "@/hooks/useProducts";
+import { useMenuItems } from "@/hooks/useMenuItems";
+import useSWR from "swr";
+import { categoryApi } from "@/lib/api";
+import { MenuItem } from "@/types/menuItems";
 import { badgeColorClassMap } from "@/lib/badgeColors";
 
 interface ProductsSectionProps {
@@ -28,6 +32,8 @@ interface ProductsSectionProps {
 
 export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu, setShowMenu }: ProductsSectionProps) {
   const { products, isLoading, error } = useProducts();
+  const { menuItems, isLoading: menuItemsLoading, error: menuItemsError } = useMenuItems();
+  const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useSWR("/api/categories", categoryApi.getAll);
 
   // Fallback to old hardcoded products if no data
   const fallbackProducts = [
@@ -91,6 +97,14 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
   // Find the selected product from the fetched products
   const selectedProductObj = products?.find(p => p.id === selectedProduct) || null;
 
+  // Group menu items by category
+  const menuItemsByCategory: Record<string, MenuItem[]> = {};
+  if (Array.isArray(categories) && Array.isArray(menuItems)) {
+    for (const category of categories) {
+      menuItemsByCategory[category.id] = menuItems.filter((item) => item.categoryId === category.id);
+    }
+  }
+
   if (isLoading) {
     return (
       <section id="products" className="py-12 sm:py-16 lg:py-20 bg-beige/30">
@@ -109,45 +123,6 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
         </div>
       </section>
     );
-  }
-
-  const fullMenu = {
-    "Fresh Baked Daily": [
-      { name: "Sourdough Loaf", price: "$8.50", description: "24-hour fermented with crispy crust" },
-      { name: "Multigrain Bread", price: "$7.50", description: "Packed with seeds and grains" },
-      { name: "White Sandwich Loaf", price: "$6.50", description: "Soft and fluffy" },
-      { name: "Rye Bread", price: "$8.00", description: "Dense with caraway seeds" },
-    ],
-    "Artisanal Pies": [
-      { name: "Beef & Mushroom", price: "$12.50", description: "Tender beef with fresh mushrooms" },
-      { name: "Chicken & Leek", price: "$11.50", description: "Free-range chicken with garden leeks" },
-      { name: "Vegetarian Delight", price: "$10.50", description: "Seasonal vegetables in herb sauce" },
-      { name: "Apple & Cinnamon", price: "$9.50", description: "Sweet dessert pie with local apples" },
-    ],
-    "Fresh Pastries": [
-      { name: "Butter Croissants", price: "$4.50", description: "Classic French with 64 layers" },
-      { name: "Pain au Chocolat", price: "$5.50", description: "Croissant with dark chocolate" },
-      { name: "Danish Pastries", price: "$5.00", description: "Sweet with seasonal fruit" },
-      { name: "Almond Croissants", price: "$6.00", description: "Filled with almond cream" },
-    ],
-    "Premium Coffee": [
-      { name: "Flat White", price: "$4.50", description: "Double shot with steamed milk" },
-      { name: "Cappuccino", price: "$4.50", description: "Espresso with foam art" },
-      { name: "Long Black", price: "$4.00", description: "Double shot with hot water" },
-      { name: "Iced Coffee", price: "$5.50", description: "Cold brew with ice cream" },
-    ],
-    "Custom Cakes": [
-      { name: "Birthday Cakes", price: "From $45", description: "Custom designs for all ages" },
-      { name: "Wedding Cakes", price: "From $150", description: "Elegant multi-tier cakes" },
-      { name: "Chocolate Mud Cake", price: "$35", description: "Rich with ganache" },
-      { name: "Lemon Drizzle", price: "$28", description: "Light sponge with lemon glaze" },
-    ],
-    "Sushi & Rolls": [
-      { name: "Salmon Avocado Roll", price: "$8.50", description: "Fresh salmon with avocado" },
-      { name: "Chicken Teriyaki Roll", price: "$7.50", description: "Grilled chicken with teriyaki" },
-      { name: "Vegetarian Roll", price: "$6.50", description: "Cucumber and pickled vegetables" },
-      { name: "Tuna Sashimi", price: "$12.00", description: "Fresh tuna sliced to perfection" },
-    ],
   }
 
   return (
@@ -384,7 +359,6 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                             </DialogDescription>
                           </div>
                         </div>
-
                         <div className="relative w-full sm:w-80">
                           <motion.div
                             initial={{ opacity: 0, x: 20 }}
@@ -423,9 +397,9 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                   </DialogHeader>
 
                   <div className="space-y-6 sm:space-y-8">
-                    {Object.entries(fullMenu).map(([category, items], categoryIndex) => (
+                    {(Array.isArray(categories) ? categories : []).map((category, categoryIndex) => (
                       <motion.div
-                        key={category}
+                        key={category.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
@@ -435,22 +409,29 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                           className="text-xl sm:text-2xl font-bold text-chocolate border-b-2 border-caramel/30 pb-2"
                           whileHover={{ color: "#D6A77A" }}
                         >
-                          {category}
+                          {category.name}
                         </motion.h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {items.map((item, itemIndex) => (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                          {(menuItemsByCategory[category.id] || []).map((item, itemIndex) => (
                             <motion.div
-                              key={item.name}
+                              key={item.id}
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.4, delay: categoryIndex * 0.1 + itemIndex * 0.05 }}
                               whileHover={{ scale: 1.02, x: 5 }}
-                              className="flex justify-between items-start p-4 bg-beige/20 rounded-lg hover:bg-beige/40 transition-colors"
+                              className="flex items-start space-x-3 p-3 bg-beige/30 rounded-lg"
                             >
+                              <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: itemIndex * 0.2 }}
+                                className="w-2 h-2 bg-caramel rounded-full flex-shrink-0 mt-2"
+                              />
                               <div className="flex-1">
                                 <div className="flex justify-between items-start mb-1">
-                                  <h4 className="font-semibold text-chocolate text-sm sm:text-base">{item.name}</h4>
-                                  <span className="font-bold text-caramel text-sm sm:text-base ml-2">{item.price}</span>
+                                  <h4 className="font-medium text-chocolate text-sm sm:text-base">{item.name}</h4>
+                                  <span className="font-bold text-caramel text-sm sm:text-base ml-2 flex-shrink-0">
+                                    ${item.price?.toFixed(2) ?? "-"}
+                                  </span>
                                 </div>
                                 <p className="text-xs sm:text-sm text-chocolate/70">{item.description}</p>
                               </div>
