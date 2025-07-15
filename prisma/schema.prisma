@@ -61,3 +61,11 @@ model AdminUser {
   role      String   @default("admin")
   createdAt DateTime @default(now())
 }
+
+model ImageMessage {
+  id        String   @id @default(uuid())
+  imageUrl  String
+  message   String
+  icon      String
+  createdAt DateTime @default(now())
+}

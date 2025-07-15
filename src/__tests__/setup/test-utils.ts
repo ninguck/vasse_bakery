@@ -139,6 +139,19 @@ export const testUtils = {
       data: defaultData,
     })
   },
+
+  // Create a test ImageMessage
+  async createTestImageMessage(data?: Partial<any>) {
+    const defaultData = {
+      imageUrl: 'https://example.com/test.jpg',
+      message: 'Test message',
+      icon: 'star',
+      ...data,
+    }
+    return await testDb.client.imageMessage.create({
+      data: defaultData,
+    })
+  },
 }
 
 // Helper to validate response structure
