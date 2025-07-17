@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Package, Menu, Tag, HelpCircle } from "lucide-react"
+import { Package, Menu, Tag, HelpCircle, Wrench } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { productApi, categoryApi, menuItemApi, faqApi } from "@/lib/api"
@@ -35,6 +35,12 @@ const navigationItems = [
         label: "FAQs",
         icon: HelpCircle,
         description: "Customer questions",
+    },
+    {
+        id: "customisation",
+        label: "Customisation",
+        icon: Wrench,
+        description: "Site-wide settings",
     },
 ]
 

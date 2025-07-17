@@ -8,6 +8,7 @@ import { ProductManagement } from "@/components/admin/product-management"
 import { MenuItemManagement } from "@/components/admin/menu-item-management"
 import { CategoryManagement } from "@/components/admin/category-management"
 import { FAQManagement } from "@/components/admin/faq-management"
+import { CustomisationManagement } from "@/components/admin/customisation-management"
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
     const [activeSection, setActiveSection] = useState("products")
@@ -22,6 +23,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 return <CategoryManagement />
             case "faqs":
                 return <FAQManagement />
+            case "customisation":
+                return <CustomisationManagement />
             default:
                 return (
                     <div className="space-y-6">
