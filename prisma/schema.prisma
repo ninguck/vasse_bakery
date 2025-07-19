@@ -62,10 +62,13 @@ model AdminUser {
   createdAt DateTime @default(now())
 }
 
-model ImageMessage {
-  id        String   @id @default(uuid())
-  imageUrl  String
-  message   String
-  icon      String
-  createdAt DateTime @default(now())
+model MiscContent {
+  id         String   @id @default(uuid())
+  section    String   // e.g. "hero", "about", "address", etc.
+  imageUrl   String?  // Optional: for sections that need an image
+  icon       String?  // Optional: for sections that need an icon
+  largeText  String?  // Optional: e.g. hero card headline
+  smallText  String?  // Optional: e.g. hero card subtext
+  message    String?  // Optional: for generic text (address, etc.)
+  createdAt  DateTime @default(now())
 }
