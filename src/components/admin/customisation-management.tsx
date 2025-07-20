@@ -24,6 +24,7 @@ import {
   Leaf,
   MapPin,
   Clock,
+  Phone,
   Utensils,
   Cake,
   Cookie,
@@ -58,10 +59,18 @@ interface HeroFormData {
   smallText: string
 }
 
+interface LocationFormData {
+  address: string
+  hours: string
+  contact: string
+}
+
 export function CustomisationManagement() {
   const { miscContent, isLoading, error, mutate } = useMiscContent()
   const [showHeroDialog, setShowHeroDialog] = useState(false)
+  const [showLocationDialog, setShowLocationDialog] = useState(false)
   const [editingHero, setEditingHero] = useState<MiscContent | null>(null)
+  const [editingLocation, setEditingLocation] = useState<MiscContent | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [heroFormData, setHeroFormData] = useState<HeroFormData>({
@@ -70,9 +79,22 @@ export function CustomisationManagement() {
     largeText: '',
     smallText: ''
   })
+  const [locationFormData, setLocationFormData] = useState<LocationFormData>({
+    address: '',
+    hours: '',
+    contact: ''
+  })
 
-  // Filter hero content
+  // Predefined location sections with fixed icons and titles
+  const LOCATION_SECTIONS = [
+    { value: 'address', label: 'Address', icon: 'map-pin' },
+    { value: 'hours', label: 'Opening Hours', icon: 'clock' },
+    { value: 'contact', label: 'Contact', icon: 'phone' }
+  ]
+
+  // Filter content by section
   const heroContent = miscContent.filter(item => item.section === 'hero')
+  const locationContent = miscContent.filter(item => item.section === 'location')
 
   const resetHeroForm = () => {
     setHeroFormData({
@@ -80,6 +102,14 @@ export function CustomisationManagement() {
       icon: '',
       largeText: '',
       smallText: ''
+    })
+  }
+
+  const resetLocationForm = () => {
+    setLocationFormData({
+      address: '',
+      hours: '',
+      contact: ''
     })
   }
 
@@ -187,6 +217,75 @@ export function CustomisationManagement() {
     setShowHeroDialog(false)
     setEditingHero(null)
     resetHeroForm()
+  }
+
+  const handleLocationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      // Save all three sections
+      const sectionsToSave = [
+        {
+          section: 'location',
+          icon: 'map-pin',
+          largeText: 'Address',
+          message: locationFormData.address
+        },
+        {
+          section: 'location',
+          icon: 'clock',
+          largeText: 'Opening Hours',
+          message: locationFormData.hours
+        },
+        {
+          section: 'location',
+          icon: 'phone',
+          largeText: 'Contact',
+          message: locationFormData.contact
+        }
+      ]
+
+      // Find existing location items to update, or create new ones
+      for (const sectionData of sectionsToSave) {
+        const existingItem = locationContent.find(item => item.icon === sectionData.icon)
+        
+        if (existingItem) {
+          // Update existing item
+          await miscContentApi.update(existingItem.id, sectionData)
+        } else {
+          // Create new item
+          await miscContentApi.create(sectionData)
+        }
+      }
+      
+      toast.success('Location information updated successfully')
+      mutate() // Refresh the data
+    } catch (error) {
+      console.error('Error saving location content:', error)
+      toast.error('Failed to save location content')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEditLocation = () => {
+    // Load existing location data into form
+    const addressItem = locationContent.find(item => item.icon === 'map-pin')
+    const hoursItem = locationContent.find(item => item.icon === 'clock')
+    const contactItem = locationContent.find(item => item.icon === 'phone')
+    
+    setLocationFormData({
+      address: addressItem?.message || '',
+      hours: hoursItem?.message || '',
+      contact: contactItem?.message || ''
+    })
+    setShowLocationDialog(true)
+  }
+
+  const handleCloseLocationDialog = () => {
+    setShowLocationDialog(false)
+    resetLocationForm()
   }
 
   const removeImage = () => {
@@ -468,16 +567,149 @@ export function CustomisationManagement() {
         </CardContent>
       </Card>
 
-      {/* Placeholder for future sections */}
-      <Card className="bg-white border-sage/20 opacity-50">
+      {/* Location Management */}
+      <Card className="bg-white border-sage/20">
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg text-chocolate/70">More Sections Coming Soon</CardTitle>
-          <p className="text-sm text-chocolate/50 mt-1">About section, address, and other customisable areas will be added here</p>
-        </CardHeader>
-        <CardContent>
-          <div className="text-chocolate/40 py-4 text-center">
-            Additional customisation sections will be implemented here...
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg text-chocolate">Location Information</CardTitle>
+              <p className="text-sm text-chocolate/50 mt-1">Manage your bakery's address, opening hours, and contact information</p>
+            </div>
+            <Dialog open={showLocationDialog} onOpenChange={setShowLocationDialog}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="bg-caramel hover:bg-caramel/90 text-white" onClick={handleEditLocation}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Location Info
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-chocolate">Edit Location Information</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleLocationSubmit} className="space-y-6">
+                  {/* Address Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-5 w-5 text-caramel" />
+                      <Label htmlFor="location-address" className="text-chocolate font-medium">Address</Label>
+                    </div>
+                    <textarea
+                      id="location-address"
+                      value={locationFormData.address}
+                      onChange={(e) => setLocationFormData({ ...locationFormData, address: e.target.value })}
+                      placeholder="Enter your bakery address"
+                      rows={3}
+                      className="w-full px-3 py-2 border border-sage/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-caramel/20"
+                    />
+                    <p className="text-xs text-chocolate/60">Your bakery's physical address</p>
+                  </div>
+
+                  {/* Opening Hours Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-caramel" />
+                      <Label htmlFor="location-hours" className="text-chocolate font-medium">Opening Hours</Label>
+                    </div>
+                    <textarea
+                      id="location-hours"
+                      value={locationFormData.hours}
+                      onChange={(e) => setLocationFormData({ ...locationFormData, hours: e.target.value })}
+                      placeholder="Enter your opening hours"
+                      rows={3}
+                      className="w-full px-3 py-2 border border-sage/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-caramel/20"
+                    />
+                    <p className="text-xs text-chocolate/60">Your bakery's opening hours</p>
+                  </div>
+
+                  {/* Contact Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-5 w-5 text-caramel" />
+                      <Label htmlFor="location-contact" className="text-chocolate font-medium">Contact</Label>
+                    </div>
+                    <textarea
+                      id="location-contact"
+                      value={locationFormData.contact}
+                      onChange={(e) => setLocationFormData({ ...locationFormData, contact: e.target.value })}
+                      placeholder="Enter your contact information"
+                      rows={3}
+                      className="w-full px-3 py-2 border border-sage/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-caramel/20"
+                    />
+                    <p className="text-xs text-chocolate/60">Your contact information</p>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleCloseLocationDialog}
+                      disabled={isSubmitting}
+                      className="border-sage/20 text-chocolate"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-caramel hover:bg-caramel/90 text-white"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="mr-2 h-4 w-4" />
+                          Save All Location Info
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
+        </CardHeader>
+        <CardContent className="overflow-hidden">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-caramel" />
+              <span className="ml-2 text-chocolate">Loading location content...</span>
+            </div>
+          ) : locationContent.length === 0 ? (
+            <div className="text-chocolate/60 py-8 text-center">
+              No location content found. Click "Edit Location Info" to add your location information!
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {locationContent.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 border border-sage/20 rounded-lg bg-white"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="secondary" className="bg-sage/10 text-sage border-sage/20 flex-shrink-0">
+                      Location
+                    </Badge>
+                    {item.icon && (
+                      <div className="flex-shrink-0">
+                        {renderIcon(item.icon)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {item.largeText && (
+                      <p className="font-medium text-chocolate break-words">{item.largeText}</p>
+                    )}
+                    {item.message && (
+                      <p className="text-sm text-chocolate/70 break-words whitespace-pre-line">{item.message}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

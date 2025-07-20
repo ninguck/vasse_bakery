@@ -2,11 +2,38 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { MapPin, Clock, Phone } from "lucide-react"
+import { MapPin, Clock, Phone, Coffee, Heart, Sparkles, Flame, Leaf, Utensils, Gift, Star } from "lucide-react"
 import { containerVariants, itemVariants } from "@/lib/animations"
+import { useMiscContent } from "@/hooks/useMiscContent"
+
+// Helper function to render icon from string value
+const renderIcon = (iconValue: string) => {
+  const iconMap: { [key: string]: React.ComponentType<any> } = {
+    'map-pin': MapPin,
+    clock: Clock,
+    phone: Phone,
+    coffee: Coffee,
+    heart: Heart,
+    sparkles: Sparkles,
+    flame: Flame,
+    leaf: Leaf,
+    utensils: Utensils,
+    gift: Gift,
+    star: Star,
+  }
+  
+  const IconComponent = iconMap[iconValue] || MapPin
+  return <IconComponent className="h-6 w-6 text-chocolate" />
+}
 
 export function LocationSection() {
-  const locationInfo = [
+  const { miscContent, isLoading, error } = useMiscContent('location')
+  
+  // Filter location content
+  const locationItems = miscContent.filter(item => item.section === 'location')
+  
+  // Fallback location info if no data or loading
+  const fallbackLocationInfo = [
     {
       icon: MapPin,
       title: "Address",
@@ -26,6 +53,16 @@ export function LocationSection() {
       bgColor: "bg-beige/60",
     },
   ]
+
+  // Use dynamic data if available, otherwise use fallback
+  const locationInfo = locationItems.length > 0 
+    ? locationItems.map(item => ({
+        icon: item.icon ? renderIcon(item.icon) : MapPin,
+        title: item.largeText || "Location Info",
+        content: item.message || "",
+        bgColor: "bg-caramel/20", // Default color
+      }))
+    : fallbackLocationInfo
 
   return (
     <section id="location" className="py-20 bg-white">
