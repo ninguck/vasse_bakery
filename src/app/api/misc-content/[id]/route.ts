@@ -1,42 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { NextRequest } from "next/server";
+import { getMiscContentById, updateMiscContent, deleteMiscContent } from "@/backend/miscContent/miscContent.controller";
 
-const prisma = new PrismaClient()
-
-// GET /api/misc-content/[id]
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params
-  const item = await prisma.miscContent.findUnique({ where: { id } })
-  if (!item) return NextResponse.json(null, { status: 404 })
-  return NextResponse.json(item)
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  return getMiscContentById(params.id);
 }
 
-// PUT /api/misc-content/[id]
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params
-  const body = await req.json()
-  const { section, imageUrl, icon, largeText, smallText, message } = body
-  if (section === undefined || section === null || section === "") {
-    return NextResponse.json({ error: 'Section is required' }, { status: 400 })
-  }
-  try {
-    const updated = await prisma.miscContent.update({
-      where: { id },
-      data: { section, imageUrl, icon, largeText, smallText, message },
-    })
-    return NextResponse.json(updated)
-  } catch (error) {
-    return NextResponse.json({ error: 'Not found or update failed' }, { status: 404 })
-  }
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  return updateMiscContent(request, params.id);
 }
 
-// DELETE /api/misc-content/[id]
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params
-  try {
-    const deleted = await prisma.miscContent.delete({ where: { id } })
-    return NextResponse.json(deleted)
-  } catch (error) {
-    return NextResponse.json({ error: 'Not found or delete failed' }, { status: 404 })
-  }
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  return deleteMiscContent(params.id);
 } 
