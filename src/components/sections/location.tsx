@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { MapPin, Clock, Phone } from "lucide-react"
 import { containerVariants, itemVariants } from "@/lib/animations"
 
@@ -67,36 +66,7 @@ export function LocationSection() {
                   </motion.div>
                   <div>
                     <h4 className="font-semibold text-chocolate mb-1">{item.title}</h4>
-                    {item.title === "Address" ? (
-                      <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <p className="text-chocolate/70 underline decoration-dotted cursor-help whitespace-pre-line">
-                            {item.content}
-                          </p>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-80">
-                          <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="flex justify-between space-x-4"
-                          >
-                            <div className="space-y-1">
-                              <h4 className="text-sm font-semibold">Vasse Village</h4>
-                              <p className="text-sm">
-                                Located in the vibrant Vasse Village shopping precinct, surrounded by local shops and
-                                cafes.
-                              </p>
-                              <div className="flex items-center pt-2">
-                                <MapPin className="h-4 w-4 opacity-70 mr-1" />
-                                <span className="text-xs text-muted-foreground">15 minutes from Busselton</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        </HoverCardContent>
-                      </HoverCard>
-                    ) : (
-                      <p className="text-chocolate/70 whitespace-pre-line">{item.content}</p>
-                    )}
+                    <p className="text-chocolate/70 whitespace-pre-line">{item.content}</p>
                   </div>
                 </motion.div>
               ))}
