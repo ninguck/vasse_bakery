@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { Package, Menu, Tag, HelpCircle, Wrench } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { productApi, categoryApi, menuItemApi, faqApi } from "@/lib/api"
+import { productApi, categoryApi, menuItemApi, faqApi, miscContentApi } from "@/lib/api"
 
 interface AdminSidebarProps {
     activeSection: string
@@ -50,6 +50,7 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
         menuItems: 0,
         categories: 0,
         faqs: 0,
+        miscContent: 0,
     })
     const [loading, setLoading] = useState(true)
 
@@ -57,11 +58,12 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
         async function fetchStats() {
             try {
                 setLoading(true)
-                const [products, menuItems, categories, faqs] = await Promise.all([
+                const [products, menuItems, categories, faqs, miscContent] = await Promise.all([
                     productApi.getAll(),
                     menuItemApi.getAll(),
                     categoryApi.getAll(),
                     faqApi.getAll(),
+                    miscContentApi.getAll(),
                 ])
 
                 setStats({
@@ -69,6 +71,7 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
                     menuItems: Array.isArray(menuItems) ? menuItems.length : 0,
                     categories: Array.isArray(categories) ? categories.length : 0,
                     faqs: Array.isArray(faqs) ? faqs.length : 0,
+                    miscContent: Array.isArray(miscContent) ? miscContent.length : 0,
                 })
             } catch (error) {
                 console.error("Failed to fetch stats:", error)
@@ -139,6 +142,12 @@ export function AdminSidebar({ activeSection, onSectionChange }: AdminSidebarPro
                 <span className="text-chocolate/70">FAQs</span>
                 <span className="font-medium text-chocolate">
                     {loading ? "..." : stats.faqs}
+                </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                <span className="text-chocolate/70">Site Content</span>
+                <span className="font-medium text-chocolate">
+                    {loading ? "..." : stats.miscContent}
                 </span>
                 </div>
             </div>
