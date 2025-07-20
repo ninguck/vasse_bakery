@@ -91,6 +91,26 @@ export const faqApi = {
     }),
 }
 
+// Misc Content API functions
+export const miscContentApi = {
+    getAll: (section?: string) => {
+        const url = section ? `/misc-content?section=${encodeURIComponent(section)}` : '/misc-content'
+        return apiRequest(url)
+    },
+    getById: (id: string) => apiRequest(`/misc-content/${id}`),
+    create: (data: any) => apiRequest('/misc-content', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    }),
+    update: (id: string, data: any) => apiRequest(`/misc-content/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    }),
+    delete: (id: string) => apiRequest(`/misc-content/${id}`, {
+        method: 'DELETE',
+    }),
+}
+
 // Type definitions for better TypeScript support
 export interface Product {
     id: string
@@ -128,5 +148,16 @@ export interface FAQ {
     id: string
     question: string
     answer: string
+    createdAt: string
+}
+
+export interface MiscContent {
+    id: string
+    section: string
+    imageUrl?: string | null
+    icon?: string | null
+    largeText?: string | null
+    smallText?: string | null
+    message?: string | null
     createdAt: string
 } 

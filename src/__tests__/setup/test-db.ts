@@ -39,6 +39,7 @@ export const testDb = {
       await testPrisma.category.deleteMany()
       await testPrisma.fAQ.deleteMany()
       await testPrisma.adminUser.deleteMany()
+      await testPrisma.miscContent.deleteMany()
       
       console.log('Test database cleaned up')
     } catch (error) {
