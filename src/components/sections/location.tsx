@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { MapPin, Clock, Phone, Coffee, Heart, Sparkles, Flame, Leaf, Utensils, Gift, Star } from "lucide-react"
+import { MapPin, Clock, Coffee, Heart, Sparkles, Flame, Leaf, Utensils, Gift, Star } from "lucide-react"
 import { containerVariants, itemVariants } from "@/lib/animations"
 import { useMiscContent } from "@/hooks/useMiscContent"
 
@@ -11,7 +11,6 @@ const renderIcon = (iconValue: string) => {
   const iconMap: { [key: string]: React.ComponentType<any> } = {
     'map-pin': MapPin,
     clock: Clock,
-    phone: Phone,
     coffee: Coffee,
     heart: Heart,
     sparkles: Sparkles,
@@ -21,7 +20,7 @@ const renderIcon = (iconValue: string) => {
     gift: Gift,
     star: Star,
   }
-  
+  // Defensive: fallback to MapPin if icon is not found
   const IconComponent = iconMap[iconValue] || MapPin
   return <IconComponent className="h-6 w-6 text-chocolate" />
 }
@@ -35,19 +34,19 @@ export function LocationSection() {
   // Fallback location info if no data or loading
   const fallbackLocationInfo = [
     {
-      icon: MapPin,
+      icon: "map-pin",
       title: "Address",
       content: "12 Napoleon Promenade\nVasse, Western Australia",
       bgColor: "bg-caramel/20",
     },
     {
-      icon: Clock,
+      icon: "clock",
       title: "Opening Hours",
       content: "Monday - Friday: 6:00 AM - 4:00 PM\nSaturday - Sunday: 6:30 AM - 3:00 PM",
       bgColor: "bg-sage/20",
     },
     {
-      icon: Phone,
+      icon: "star",
       title: "Contact",
       content: "Call us for special orders\nor any inquiries",
       bgColor: "bg-beige/60",
@@ -57,11 +56,16 @@ export function LocationSection() {
   // Use dynamic data if available, otherwise use fallback
   const locationInfo = locationItems.length > 0 
     ? locationItems.map(item => ({
-        icon: item.icon ? renderIcon(item.icon) : MapPin,
+        icon: item.icon || "map-pin",
         title: item.largeText || "Location Info",
         content: item.message || "",
         bgColor: "bg-caramel/20", // Default color
       }))
+      // Ensure order: Address, Opening Hours, Contact
+      .sort((a, b) => {
+        const order = ["Address", "Opening Hours", "Contact"];
+        return order.indexOf(a.title) - order.indexOf(b.title);
+      })
     : fallbackLocationInfo
 
   return (
@@ -99,7 +103,7 @@ export function LocationSection() {
                     transition={{ duration: 0.6 }}
                     className={`w-12 h-12 ${item.bgColor} rounded-full flex items-center justify-center flex-shrink-0`}
                   >
-                    <item.icon className="h-6 w-6 text-chocolate" />
+                    {renderIcon(item.icon)}
                   </motion.div>
                   <div>
                     <h4 className="font-semibold text-chocolate mb-1">{item.title}</h4>

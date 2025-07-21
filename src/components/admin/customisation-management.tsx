@@ -223,18 +223,25 @@ export function CustomisationManagement() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    // Only allow these icon values for location
+    const allowedIcons = {
+      address: 'map-pin',
+      hours: 'clock',
+      contact: 'phone',
+    }
+
     try {
       // Save all three sections
       const sectionsToSave = [
         {
           section: 'location',
-          icon: 'map-pin',
+          icon: allowedIcons.address,
           largeText: 'Address',
           message: locationFormData.address
         },
         {
           section: 'location',
-          icon: 'clock',
+          icon: allowedIcons.hours,
           largeText: 'Opening Hours',
           message: locationFormData.hours
         },
@@ -248,17 +255,17 @@ export function CustomisationManagement() {
 
       // Find existing location items to update, or create new ones
       for (const sectionData of sectionsToSave) {
+        // Defensive: if icon is not allowed, default to map-pin
+        if (!Object.values(allowedIcons).includes(sectionData.icon)) {
+          sectionData.icon = 'map-pin'
+        }
         const existingItem = locationContent.find(item => item.icon === sectionData.icon)
-        
         if (existingItem) {
-          // Update existing item
           await miscContentApi.update(existingItem.id, sectionData)
         } else {
-          // Create new item
           await miscContentApi.create(sectionData)
         }
       }
-      
       toast.success('Location information updated successfully')
       mutate() // Refresh the data
     } catch (error) {
