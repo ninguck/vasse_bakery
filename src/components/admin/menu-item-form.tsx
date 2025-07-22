@@ -66,7 +66,7 @@ export function MenuItemForm({ menuItem, onClose, onSuccess }: MenuItemFormProps
                 name: formData.name,
                 description: formData.description,
                 price: parseFloat(formData.price),
-                productId: formData.linkedProductId || null,
+                productId: formData.linkedProductId ? formData.linkedProductId : undefined,
                 categoryId: formData.linkedCategoryId,
             }
 
