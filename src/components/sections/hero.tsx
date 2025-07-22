@@ -120,21 +120,21 @@ const ScrollDownAnimation = () => {
     >
       <motion.button
         onClick={scrollToNextSection}
-        className="flex flex-col items-center space-y-2 text-sage/60 hover:text-sage transition-colors duration-300 group"
+        className="flex flex-col items-center space-y-2 text-sage/60 hover:text-caramel transition-colors duration-300 group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="flex flex-col items-center space-y-1"
         >
-          <span className="text-sm font-medium tracking-wider uppercase">Scroll</span>
-          <ChevronDown className="h-6 w-6 group-hover:text-caramel transition-colors duration-300" />
+          <span className="text-sm font-medium tracking-wider uppercase group-hover:text-inherit">Scroll</span>
+          <ChevronDown className="h-6 w-6 group-hover:text-inherit transition-colors duration-300" />
         </motion.div>
         <motion.div
           animate={{ opacity: [0.3, 1, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="w-px h-8 bg-gradient-to-b from-sage/40 to-transparent"
         />
       </motion.button>
