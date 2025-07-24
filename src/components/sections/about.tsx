@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Croissant, MapPin, Coffee } from "lucide-react"
 import { containerVariants, cardVariants } from "@/lib/animations"
+import SpotlightCard from "@/components/ui/reactBits/Components/SpotlightCard/SpotlightCard";
 
 export function AboutSection() {
   const features = [
@@ -54,7 +55,7 @@ export function AboutSection() {
         >
           {features.map((item, index) => (
             <motion.div key={index} variants={cardVariants} whileHover="hover">
-              <Card className="border-sage/20 hover:shadow-lg transition-shadow h-full">
+              <SpotlightCard className="bg-white border-sage/20 hover:shadow-lg transition-shadow h-full" spotlightColor={`rgba(214, 167, 122, 0.2)`}>
                 <CardContent className="p-6 text-center">
                   <motion.div
                     whileHover={{ rotate: 360 }}
@@ -66,7 +67,7 @@ export function AboutSection() {
                   <h4 className="text-xl font-semibold text-chocolate mb-2">{item.title}</h4>
                   <p className="text-chocolate/70">{item.description}</p>
                 </CardContent>
-              </Card>
+              </SpotlightCard>
             </motion.div>
           ))}
         </motion.div>
