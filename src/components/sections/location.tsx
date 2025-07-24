@@ -99,8 +99,6 @@ export function LocationSection() {
                   className="flex items-start space-x-4"
                 >
                   <motion.div
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
                     className={`w-12 h-12 ${item.bgColor} rounded-full flex items-center justify-center flex-shrink-0`}
                   >
                     {renderIcon(item.icon)}
@@ -135,22 +133,18 @@ export function LocationSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <motion.div
-              whileHover={{ scale: 1.02, rotate: 1 }}
-              transition={{ duration: 0.4 }}
-              className="bg-sage/10 rounded-2xl p-8 h-96 flex items-center justify-center"
-            >
-              <div className="text-center">
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                >
-                  <MapPin className="h-16 w-16 text-caramel mx-auto mb-4" />
-                </motion.div>
-                <h4 className="text-xl font-semibold text-chocolate mb-2">Interactive Map</h4>
-                <p className="text-chocolate/70">Located in the heart of Vasse Village</p>
-              </div>
-            </motion.div>
+            <div className="w-full h-96 rounded-2xl overflow-hidden shadow-lg">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3320.311279855223!2d115.250711!3d-33.6750032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2a2e471e84c5907f%3A0xace1499655a819c!2sVasse%20Bakery!5e0!3m2!1sen!2sau!4v1753355570233!5m2!1sen!2sau"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Vasse Bakery Location"
+              />
+            </div>
           </motion.div>
         </div>
       </div>
