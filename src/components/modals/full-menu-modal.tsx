@@ -5,6 +5,7 @@ import { CroissantIcon } from "lucide-react";
 import type { Category } from "@/types/categories";
 import type { MenuItem } from "@/types/menuItems";
 import { modalVariants } from "@/lib/animations";
+import { useMiscContent } from "@/hooks/useMiscContent";
 
 interface FullMenuModalProps {
   open: boolean;
@@ -15,6 +16,13 @@ interface FullMenuModalProps {
 }
 
 export function FullMenuModal({ open, onOpenChange, categories, menuItemsByCategory, setShowMenu }: FullMenuModalProps) {
+  // Fetch special notes from misc content
+  const { miscContent } = useMiscContent();
+  const specialNotesContent = miscContent.find(item => item.section === 'special-notes');
+  const specialNotesLines = specialNotesContent?.message
+    ? specialNotesContent.message.split(/\r?\n/).filter(line => line.trim() !== "")
+    : [];
+
   return (
     <AnimatePresence>
       {open && (
@@ -123,20 +131,21 @@ export function FullMenuModal({ open, onOpenChange, categories, menuItemsByCateg
                 ))}
 
                 {/* Special Notes */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                  className="bg-sage/20 p-4 sm:p-6 rounded-xl"
-                >
-                  <h4 className="font-bold text-chocolate mb-3 text-base sm:text-lg">Special Notes</h4>
-                  <div className="space-y-2 text-xs sm:text-sm text-chocolate/70">
-                    <p>• All bread and pastries baked fresh daily from 5:00 AM</p>
-                    <p>• Gluten-free options available - please ask our staff</p>
-                    <p>• Custom cake orders require 48 hours notice</p>
-                    <p>• Prices subject to change based on seasonal availability</p>
-                  </div>
-                </motion.div>
+                {specialNotesLines.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    className="bg-sage/20 p-4 sm:p-6 rounded-xl"
+                  >
+                    <h4 className="font-bold text-chocolate mb-3 text-base sm:text-lg">Special Notes</h4>
+                    <ul className="space-y-2 text-xs sm:text-sm text-chocolate/70 list-disc list-inside">
+                      {specialNotesLines.map((line, idx) => (
+                        <li key={idx}>{line}</li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
               </div>
 
               <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-6 sticky bottom-0 pt-4">

@@ -30,7 +30,7 @@ import {
   Cookie,
   Gift
 } from "lucide-react"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
 import { useMiscContent } from "@/hooks/useMiscContent"
 import { miscContentApi, MiscContent } from "@/lib/api"
@@ -84,6 +84,15 @@ export function CustomisationManagement() {
     hours: '',
     contact: ''
   })
+  const [showSpecialNotesDialog, setShowSpecialNotesDialog] = useState(false);
+  const [specialNotes, setSpecialNotes] = useState("");
+  const specialNotesContent = miscContent.find(item => item.section === 'special-notes');
+
+  useEffect(() => {
+    if (specialNotesContent) {
+      setSpecialNotes(specialNotesContent.message || "");
+    }
+  }, [specialNotesContent]);
 
   // Predefined location sections with fixed icons and titles
   const LOCATION_SECTIONS = [
@@ -298,6 +307,32 @@ export function CustomisationManagement() {
   const removeImage = () => {
     setHeroFormData(prev => ({ ...prev, imageUrl: '' }))
   }
+
+  const handleSpecialNotesSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const formData = {
+        section: 'special-notes',
+        largeText: 'Special Notes',
+        message: specialNotes,
+      };
+      if (specialNotesContent) {
+        await miscContentApi.update(specialNotesContent.id, formData);
+        toast.success('Special notes updated successfully');
+      } else {
+        await miscContentApi.create(formData);
+        toast.success('Special notes created successfully');
+      }
+      setShowSpecialNotesDialog(false);
+      mutate();
+    } catch (error) {
+      console.error('Error saving special notes:', error);
+      toast.error('Failed to save special notes');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Helper function to render icon
   const renderIcon = (iconValue: string) => {
@@ -719,6 +754,60 @@ export function CustomisationManagement() {
           )}
         </CardContent>
       </Card>
+
+      {/* Special Notes Management */}
+      <Card className="bg-white border-sage/20">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg text-chocolate">Special Notes</CardTitle>
+            <p className="text-sm text-chocolate/50 mt-1">These notes will appear at the bottom of the full menu modal.</p>
+          </div>
+          <Button size="sm" className="bg-caramel hover:bg-caramel/90 text-white" onClick={() => setShowSpecialNotesDialog(true)}>
+            {specialNotesContent ? 'Edit Notes' : 'Add Notes'}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {specialNotesContent && (
+            <div className="whitespace-pre-line text-chocolate/80 text-sm bg-beige/10 rounded p-3">
+              {specialNotesContent.message}
+            </div>
+          )}
+          {!specialNotesContent && (
+            <div className="text-chocolate/40 py-4 text-center">
+              No special notes added yet.
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      {/* Special Notes Dialog */}
+      <Dialog open={showSpecialNotesDialog} onOpenChange={setShowSpecialNotesDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-chocolate">{specialNotesContent ? 'Edit Special Notes' : 'Add Special Notes'}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSpecialNotesSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="special-notes" className="text-chocolate">Special Notes</Label>
+              <textarea
+                id="special-notes"
+                value={specialNotes}
+                onChange={e => setSpecialNotes(e.target.value)}
+                placeholder={"Enter each note on a new line. (No bullet points needed)"}
+                rows={6}
+                className="w-full px-3 py-2 border border-sage/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-caramel/20"
+                required
+              />
+              <p className="text-xs text-chocolate/60 mt-1">Each line will appear as a separate bullet point in the menu modal.</p>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setShowSpecialNotesDialog(false)} disabled={isSubmitting} className="border-sage/20 text-chocolate">Cancel</Button>
+              <Button type="submit" disabled={isSubmitting} className="bg-caramel hover:bg-caramel/90 text-white">
+                {isSubmitting ? 'Saving...' : 'Save Notes'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 
