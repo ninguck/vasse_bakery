@@ -3,6 +3,7 @@
 import { motion, Variants } from "framer-motion"
 import { Croissant } from "lucide-react"
 import { useEffect, useState } from "react"
+import SplitText from "../ui/reactBits/TextAnimations/SplitText/SplitText"
 
 interface LoadingScreenProps {
   isLoading: boolean
@@ -126,22 +127,18 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
             <Croissant className="h-16 w-16 text-chocolate" />
           </motion.div>
           <div className="overflow-hidden">
-            <motion.div variants={titleContainerVariants} initial="hidden" animate="visible" className="flex">
-              {"Vasse Bakery".split("").map((letter, index) => (
-                <motion.span
-                  key={index}
-                  variants={letterVariants}
-                  className="text-4xl font-bold text-chocolate inline-block"
-                  style={{
-                    transformOrigin: "50% 50% -50px",
-                    display: letter === " " ? "inline" : "inline-block",
-                    width: letter === " " ? "0.5em" : "auto",
-                  }}
-                >
-                  {letter === " " ? "\u00A0" : letter}
-                </motion.span>
-              ))}
-            </motion.div>
+            {/* Replaced manual letter animation with SplitText */}
+            <SplitText
+              text="Vasse Bakery"
+              className="text-4xl font-bold text-chocolate inline-block"
+              splitType="chars"
+              delay={100}
+              duration={0.6}
+              ease="power3.out"
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="left"
+            />
           </div>
         </div>
         <motion.p variants={subtitleVariants} initial="hidden" animate="visible" className="text-caramel text-lg">
