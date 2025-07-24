@@ -13,6 +13,7 @@ import { LoadingScreen } from "@/components/layout/loading-screen"
 import { AnimatePresence } from "framer-motion"
 import toast from "react-hot-toast"
 import ScrollVelocity from "@/components/ui/reactBits/TextAnimations/ScrollVelocity/ScrollVelocity";
+import CurvedLoop from "@/components/ui/reactBits/TextAnimations/CurvedLoop/CurvedLoop";
 
 export default function VasseBakeryLanding() {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
@@ -54,6 +55,31 @@ export default function VasseBakeryLanding() {
             <Header />
             <HeroSection />
             <AboutSection />
+            <section aria-hidden="true" className="relative z-[99] w-full h-[20rem] sm:h-[32rem] -mt-4 flex items-center justify-center">
+              <div className="absolute inset-0 w-full h-full" style={{background: "linear-gradient(to bottom, white 0%, rgba(245,236,224,0.3) 100%)"}} />
+              {/* Chocolate background curve */}
+              <div className="absolute z-10 left-1/2 -translate-x-1/2 translate-y-36 sm:translate-y-36 pointer-events-none w-full flex items-end justify-center">
+                <CurvedLoop
+                  marqueeText="Fresh • Local • Delicious • "
+                  speed={4}
+                  className="fill-chocolate opacity-60 blur-[1px] text-5xl sm:text-7xl"
+                  curveAmount={-250}
+                  direction="left"
+                  interactive={false}
+                />
+              </div>
+              {/* Caramel foreground curve */}
+              <div className="absolute z-10 left-1/2 -translate-x-1/2 -translate-y-36 sm:-translate-y-36 pointer-events-none w-full flex items-end justify-center">
+                <CurvedLoop
+                  marqueeText="Fresh • Local • Delicious • "
+                  speed={2}
+                  className="fill-caramel drop-shadow-lg text-5xl sm:text-7xl"
+                  curveAmount={250}
+                  direction="left"
+                  interactive={false}
+                />
+              </div>
+            </section>
             {/*
             <div className="relative z-[99] w-full py-10 bg-cream">
               <ScrollVelocity
