@@ -55,7 +55,7 @@ export default function VasseBakeryLanding() {
             <AboutSection />
             <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} showMenu={showMenu} setShowMenu={setShowMenu} />
             <LocationSection />
-            <CTASection />
+            <CTASection setShowMenu={setShowMenu} />
             <FAQSection />
             <Footer />
           </>

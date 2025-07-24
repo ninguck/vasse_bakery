@@ -3,7 +3,11 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 
-export function CTASection() {
+interface CTASectionProps {
+  setShowMenu: (show: boolean) => void;
+}
+
+export function CTASection({ setShowMenu }: CTASectionProps) {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -45,14 +49,7 @@ export function CTASection() {
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-chocolate"
-              onClick={() => {
-                const menuSection = document.getElementById('menu');
-                if (menuSection) {
-                  menuSection.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  window.location.href = '/menu';
-                }
-              }}
+              onClick={() => setShowMenu(true)}
             >
               View Full Menu
             </Button>
