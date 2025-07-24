@@ -12,6 +12,7 @@ import { FAQSection } from "@/components/sections/faq"
 import { LoadingScreen } from "@/components/layout/loading-screen"
 import { AnimatePresence } from "framer-motion"
 import toast from "react-hot-toast"
+import ScrollVelocity from "@/components/ui/reactBits/TextAnimations/ScrollVelocity/ScrollVelocity";
 
 export default function VasseBakeryLanding() {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
@@ -53,6 +54,14 @@ export default function VasseBakeryLanding() {
             <Header />
             <HeroSection />
             <AboutSection />
+            {/*
+            <div className="relative z-[99] w-full py-10 bg-cream">
+              <ScrollVelocity
+                texts={["Freshly Baked", "Vasse Bakery"]}
+                velocity={80}
+                className="text-chocolate"
+              />
+            </div>*/}
             <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} showMenu={showMenu} setShowMenu={setShowMenu} />
             <LocationSection />
             <CTASection setShowMenu={setShowMenu} />
