@@ -44,7 +44,16 @@ export function CTASection() {
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-chocolate">
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-chocolate"
+              onClick={() => {
+                const menuSection = document.getElementById('menu');
+                if (menuSection) {
+                  menuSection.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  window.location.href = '/menu';
+                }
+              }}
+            >
               View Full Menu
             </Button>
           </motion.div>
