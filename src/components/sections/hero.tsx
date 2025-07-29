@@ -167,7 +167,7 @@ export function HeroSection() {
   // If no hero content or loading, show fallback
   if (isLoading) {
     return (
-      <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-br from-beige to-cream overflow-hidden">
+      <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-b from-beige to-cream overflow-hidden">
         <FloatingBackgroundIcons />
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -186,15 +186,15 @@ export function HeroSection() {
   if (error || heroItems.length === 0) {
     // Fallback to original hardcoded content
     return (
-      <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-br from-beige to-cream overflow-hidden">
+      <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-b from-beige to-cream overflow-hidden">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="absolute inset-0 bg-gradient-to-br from-beige to-cream"
+          className="absolute inset-0 bg-gradient-to-b from-beige to-cream"
         />
         <FloatingBackgroundIcons />
-        <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="container mx-auto px-4 pt-16 pb-16 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
             <motion.div
               variants={containerVariants}
@@ -299,15 +299,15 @@ export function HeroSection() {
   const currentHero = heroItems[currentIndex]
   
   return (
-    <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-br from-beige to-cream overflow-hidden">
+    <section className="relative min-h-[calc(100vh-73px)] flex items-center bg-gradient-to-b from-beige to-cream overflow-hidden">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="absolute inset-0 bg-gradient-to-br from-beige to-cream"
+        className="absolute inset-0 bg-gradient-to-b from-beige to-cream"
       />
       <FloatingBackgroundIcons />
-      <div className="container mx-auto px-4 py-16 relative z-10">
+      <div className="container mx-auto px-4 pt-8 pb-16 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
                       <motion.div
               variants={containerVariants}
@@ -379,7 +379,7 @@ export function HeroSection() {
                 className="relative w-full h-[600px]"
               >
                 <Image
-                  src={currentHero.imageUrl}
+                  src={currentHero.imageUrl || "/placeholder.svg?height=500&width=600"}
                   alt={currentHero.largeText || "Hero image"}
                   fill
                   className="object-cover"
