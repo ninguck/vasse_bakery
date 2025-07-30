@@ -9,6 +9,7 @@ import { ProductsSection } from "@/components/sections/products"
 import { LocationSection } from "@/components/sections/location"
 import { CTASection } from "@/components/sections/cta"
 import { FAQSection } from "@/components/sections/faq"
+import { OurStory } from "@/components/sections/our-story"
 import { LoadingScreen } from "@/components/layout/loading-screen"
 import { AnimatePresence } from "framer-motion"
 import toast from "react-hot-toast"
@@ -55,9 +56,10 @@ export default function VasseBakeryLanding() {
             <Header />
             <HeroSection />
             <AboutSection />
-            <section aria-hidden="true" className="relative z-[99] w-full h-[20rem] sm:h-[32rem] -mt-4 flex items-center justify-center">
-              <div className="absolute inset-0 w-full h-full" style={{background: "linear-gradient(to bottom, white 0%, rgba(245,236,224,0.3) 100%)"}} />
-              {/* Chocolate background curve */}
+            <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} showMenu={showMenu} setShowMenu={setShowMenu} />
+            {/* Temporarily commented out separator section
+            <section aria-hidden="true" className="relative z-[99] w-full h-[20rem] sm:h-[32rem]  flex items-center justify-center">
+              <div className="absolute inset-0 w-full h-full" style={{background: "linear-gradient(to bottom, rgba(245,236,224,0.3) 0%, rgba(245,236,224,0.1) 100%)"}} />
               <div className="absolute z-10 left-1/2 -translate-x-1/2 translate-y-36 sm:translate-y-36 pointer-events-none w-full flex items-end justify-center">
                 <CurvedLoop
                   marqueeText="Fresh • Local • Delicious • "
@@ -68,7 +70,6 @@ export default function VasseBakeryLanding() {
                   interactive={false}
                 />
               </div>
-              {/* Caramel foreground curve */}
               <div className="absolute z-10 left-1/2 -translate-x-1/2 -translate-y-36 sm:-translate-y-36 pointer-events-none w-full flex items-end justify-center">
                 <CurvedLoop
                   marqueeText="Fresh • Local • Delicious • "
@@ -80,6 +81,7 @@ export default function VasseBakeryLanding() {
                 />
               </div>
             </section>
+            */}
             {/*
             <div className="relative z-[99] w-full py-10 bg-cream">
               <ScrollVelocity
@@ -88,7 +90,7 @@ export default function VasseBakeryLanding() {
                 className="text-chocolate"
               />
             </div>*/}
-            <ProductsSection selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} showMenu={showMenu} setShowMenu={setShowMenu} />
+            <OurStory />
             <LocationSection />
             <CTASection setShowMenu={setShowMenu} />
             <FAQSection />
