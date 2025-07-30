@@ -54,14 +54,6 @@ model FAQ {
   createdAt DateTime @default(now())
 }
 
-model AdminUser {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  role      String   @default("admin")
-  createdAt DateTime @default(now())
-}
-
 model MiscContent {
   id         String   @id @default(uuid())
   section    String   // e.g. "hero", "about", "address", etc.

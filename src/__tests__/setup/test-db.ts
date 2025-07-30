@@ -38,7 +38,6 @@ export const testDb = {
       await testPrisma.product.deleteMany()
       await testPrisma.category.deleteMany()
       await testPrisma.fAQ.deleteMany()
-      await testPrisma.adminUser.deleteMany()
       await testPrisma.miscContent.deleteMany()
       
       console.log('Test database cleaned up')
@@ -65,23 +64,6 @@ export const testDb = {
 
 // Only run database setup if we're in a test environment
 if (process.env.NODE_ENV === 'test') {
-  // Global test setup and teardown
-  beforeAll(async () => {
-    try {
-      await testDb.init()
-    } catch (error) {
-      console.error('Test setup failed:', error)
-      // Continue with tests even if database setup fails
-    }
-  })
-
-  afterAll(async () => {
-    await testDb.cleanup()
-    await testDb.disconnect()
-  })
-
-  // Add back afterEach cleanup for proper test isolation
-  afterEach(async () => {
-    await testDb.cleanup()
-  })
+  // Initialize test database
+  testDb.init().catch(console.error)
 } 
