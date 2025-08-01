@@ -129,14 +129,24 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
   }
 
   return (
-    <section id="products" className="py-12 sm:py-16 lg:py-20 bg-beige/30">
-      <div className="container mx-auto px-4">
+    <section id="products" className="py-16 sm:py-20 lg:py-24 relative">
+      <div className="absolute inset-0 bg-beige" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 65%, 0 65%)' }}>
+        <div className="absolute inset-0 opacity-40" style={{
+          backgroundImage: `
+            radial-gradient(circle, #FFFFFF 1.5px, transparent 2px)
+          `,
+          backgroundSize: '16px 16px',
+          backgroundPosition: '0 0, 8px 8px'
+        }}></div>
+      </div>
+      <div className="absolute inset-0 bg-white" style={{ clipPath: 'polygon(0 65%, 100% 65%, 100% 100%, 0 100%)' }}></div>
+      <div className="w-full px-8 sm:px-12 lg:px-16 xl:px-20 relative z-10">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-16 sm:mb-20"
         >
           <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-chocolate mb-4">Our Signature Offerings</h3>
           <p className="text-base sm:text-lg text-chocolate/70 max-w-2xl mx-auto px-4">
@@ -149,23 +159,24 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
+          className="w-full"
         >
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 sm:-ml-4">
               {mappedProducts.map((product, index) => (
-                <CarouselItem key={product.key} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={product.key} className="pl-2 sm:pl-4 basis-full sm:basis-1/3 lg:basis-1/4 xl:basis-1/5 h-full">
                   <motion.div
                     initial={{ y: 50, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="p-1 sm:p-2"
+                    className="p-1 sm:p-2 h-full"
                   >
                     <motion.div
                       whileHover={{ y: -10, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.3 }}
-                      className="group cursor-pointer"
+                      className="group cursor-pointer h-full"
                       onClick={() => setSelectedProduct(product.key)}
                     >
                       <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4">
@@ -174,8 +185,8 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                             src={product.image || "/placeholder.svg"}
                             alt={product.title}
                             width={300}
-                            height={250}
-                            className="w-full h-48 sm:h-64 object-cover"
+                            height={800}
+                            className="w-full h-[32rem] sm:h-[40rem] object-cover"
                           />
                         </motion.div>
                         <motion.div
@@ -209,7 +220,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <div className="flex justify-center mt-6 sm:mt-8 space-x-2">
+            <div className="flex justify-center mt-12 sm:mt-16 space-x-2">
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                 <CarouselPrevious className="relative static translate-y-0" />
               </motion.div>
