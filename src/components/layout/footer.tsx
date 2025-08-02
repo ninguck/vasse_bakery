@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Croissant } from "lucide-react"
 import Link from "next/link"
 import { containerVariants, itemVariants } from "@/lib/animations"
+import { ScrollVelocity } from "@/components/ui/reactBits/TextAnimations/ScrollVelocity/ScrollVelocity"
 
 export function Footer() {
   const quickLinks = ["About Us", "Our Products", "Visit Us", "Special Orders"]
@@ -63,16 +64,36 @@ export function Footer() {
           </motion.div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="border-t border-white/20 mt-8 pt-8 text-center text-white/70"
-        >
-          <p>&copy; {new Date().getFullYear()} Vasse Bakery. All rights reserved. Made with ❤️ in Western Australia.</p>
-        </motion.div>
       </div>
+      
+      {/* Full-width ScrollVelocity section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        viewport={{ once: true }}
+        className="w-full overflow-hidden"
+      >
+        <ScrollVelocity
+          texts={["VASSE BAKERY"]}
+          velocity={50}
+          className="text-caramel font-bold text-6xl md:text-8xl lg:text-9xl cursor-grab active:cursor-grabbing"
+          parallaxClassName="py-6"
+          scrollerClassName="text-cream select-none"
+          numCopies={8}
+        />
+      </motion.div>
+      
+      {/* Copyright section below ScrollVelocity */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 1.2 }}
+        viewport={{ once: true }}
+        className="border-t border-white/20 py-4 text-center text-white/70"
+      >
+        <p>&copy; {new Date().getFullYear()} Vasse Bakery. All rights reserved. Made with ❤️ in Western Australia.</p>
+      </motion.div>
     </motion.footer>
   )
 }
