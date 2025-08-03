@@ -9,6 +9,7 @@ import { ProductManagement } from "@/components/admin/product-management"
 import { MenuItemManagement } from "@/components/admin/menu-item-management"
 import { CategoryManagement } from "@/components/admin/category-management"
 import { FAQManagement } from "@/components/admin/faq-management"
+import { OurStoryManagement } from "@/components/admin/our-story-management"
 import { CustomisationManagement } from "@/components/admin/customisation-management"
 import { supabase } from "@/lib/supabase"
 
@@ -74,6 +75,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 return <CategoryManagement />
             case "faqs":
                 return <FAQManagement />
+            case "our-story":
+                return <OurStoryManagement />
             case "customisation":
                 return <CustomisationManagement />
             default:
