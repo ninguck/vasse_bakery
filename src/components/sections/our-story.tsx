@@ -11,6 +11,7 @@ export function OurStory() {
 
   // Filter content by section and parse milestone data
   const ourStoryContent = miscContent.filter(item => item.section === 'our-story')
+  const ourStoryIntro = miscContent.filter(item => item.section === 'our-story-intro')
   
   const historyMilestones = ourStoryContent.map(item => {
     try {
@@ -97,15 +98,23 @@ export function OurStory() {
                 </motion.div>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-chocolate">Our Story</h3>
               </div>
-              <p className="text-chocolate/80 leading-relaxed mb-6 text-sm sm:text-base">
-                What started as a dream between two passionate food lovers has grown into the heart of Vasse Village.
-                Sarah and Michael Thompson opened Vasse Bakery with a simple mission: to create a place where the
-                community could gather over exceptional baked goods and great coffee.
-              </p>
-              <p className="text-chocolate/80 leading-relaxed text-sm sm:text-base">
-                Every recipe tells a story, from Sarah's grandmother's sourdough starter that still lives in our kitchen
-                today, to the innovative fusion of traditional European techniques with local Australian ingredients.
-              </p>
+              {ourStoryIntro.length > 0 ? (
+                <div className="text-chocolate/80 leading-relaxed text-sm sm:text-base whitespace-pre-line">
+                  {ourStoryIntro[0].message}
+                </div>
+              ) : (
+                <>
+                  <p className="text-chocolate/80 leading-relaxed mb-6 text-sm sm:text-base">
+                    What started as a dream between two passionate food lovers has grown into the heart of Vasse Village.
+                    Sarah and Michael Thompson opened Vasse Bakery with a simple mission: to create a place where the
+                    community could gather over exceptional baked goods and great coffee.
+                  </p>
+                  <p className="text-chocolate/80 leading-relaxed text-sm sm:text-base">
+                    Every recipe tells a story, from Sarah's grandmother's sourdough starter that still lives in our kitchen
+                    today, to the innovative fusion of traditional European techniques with local Australian ingredients.
+                  </p>
+                </>
+              )}
             </motion.div>
             <motion.div
               initial={{ x: 50, opacity: 0 }}
@@ -120,8 +129,8 @@ export function OurStory() {
                 className="relative rounded-2xl overflow-hidden shadow-xl"
               >
                 <Image
-                  src="/placeholder.svg?height=400&width=500&text=Bakery+Interior"
-                  alt="Inside Vasse Bakery"
+                  src={ourStoryIntro.length > 0 && ourStoryIntro[0].imageUrl ? ourStoryIntro[0].imageUrl : "/placeholder.svg?height=400&width=500&text=Bakery+Interior"}
+                  alt={ourStoryIntro.length > 0 && ourStoryIntro[0].imageUrl ? "Our Story" : "Inside Vasse Bakery"}
                   width={500}
                   height={400}
                   className="w-full h-auto"

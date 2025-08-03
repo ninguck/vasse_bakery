@@ -15,7 +15,8 @@ import {
   Upload, 
   X,
   Calendar,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Heart
 } from "lucide-react"
 import { useState, useCallback, useEffect } from "react"
 import { useDropzone } from "react-dropzone"
@@ -27,6 +28,12 @@ interface MilestoneFormData {
   year: string
   title: string
   description: string
+  imageUrl: string
+  imageAlt: string
+}
+
+interface OurStoryFormData {
+  message: string
   imageUrl: string
   imageAlt: string
 }
@@ -45,14 +52,33 @@ export function OurStoryManagement() {
     imageAlt: ''
   })
 
+  const [ourStoryFormData, setOurStoryFormData] = useState<OurStoryFormData>({
+    message: '',
+    imageUrl: '',
+    imageAlt: ''
+  })
+
+  const [showOurStoryDialog, setShowOurStoryDialog] = useState(false)
+  const [editingOurStory, setEditingOurStory] = useState<MiscContent | null>(null)
+  const [isUploadingOurStory, setIsUploadingOurStory] = useState(false)
+
   // Filter content by section
   const ourStoryContent = miscContent.filter(item => item.section === 'our-story')
+  const ourStoryIntro = miscContent.filter(item => item.section === 'our-story-intro')
 
   const resetForm = () => {
     setMilestoneFormData({
       year: '',
       title: '',
       description: '',
+      imageUrl: '',
+      imageAlt: ''
+    })
+  }
+
+  const resetOurStoryForm = () => {
+    setOurStoryFormData({
+      message: '',
       imageUrl: '',
       imageAlt: ''
     })
@@ -96,6 +122,46 @@ export function OurStoryManagement() {
     },
     maxFiles: 1,
     disabled: isUploading
+  })
+
+  // Our Story image upload functionality
+  const onDropOurStory = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) return
+
+    const file = acceptedFiles[0]
+    setIsUploadingOurStory(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Upload failed')
+      }
+
+      const data = await response.json()
+      setOurStoryFormData(prev => ({ ...prev, imageUrl: data.url }))
+      toast.success('Image uploaded successfully')
+    } catch (error) {
+      console.error('Upload error:', error)
+      toast.error('Failed to upload image')
+    } finally {
+      setIsUploadingOurStory(false)
+    }
+  }, [])
+
+  const { getRootProps: getOurStoryRootProps, getInputProps: getOurStoryInputProps, isDragActive: isOurStoryDragActive } = useDropzone({
+    onDrop: onDropOurStory,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp']
+    },
+    maxFiles: 1,
+    disabled: isUploadingOurStory
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -179,8 +245,64 @@ export function OurStoryManagement() {
     resetForm()
   }
 
+  const handleOurStorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const formData = {
+        section: 'our-story-intro',
+        largeText: 'Our Story',
+        message: ourStoryFormData.message,
+        imageUrl: ourStoryFormData.imageUrl,
+        icon: 'heart'
+      }
+
+      if (editingOurStory) {
+        await miscContentApi.update(editingOurStory.id, formData)
+        toast.success('Our Story content updated successfully')
+      } else {
+        await miscContentApi.create(formData)
+        toast.success('Our Story content created successfully')
+      }
+      
+      setShowOurStoryDialog(false)
+      setEditingOurStory(null)
+      resetOurStoryForm()
+      mutate() // Refresh the data
+    } catch (error) {
+      console.error('Error saving our story content:', error)
+      toast.error('Failed to save our story content')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEditOurStory = () => {
+    const existingOurStory = ourStoryIntro[0]
+    if (existingOurStory) {
+      setEditingOurStory(existingOurStory)
+      setOurStoryFormData({
+        message: existingOurStory.message || '',
+        imageUrl: existingOurStory.imageUrl || '',
+        imageAlt: ''
+      })
+    }
+    setShowOurStoryDialog(true)
+  }
+
+  const handleCloseOurStoryDialog = () => {
+    setShowOurStoryDialog(false)
+    setEditingOurStory(null)
+    resetOurStoryForm()
+  }
+
   const removeImage = () => {
     setMilestoneFormData(prev => ({ ...prev, imageUrl: '' }))
+  }
+
+  const removeOurStoryImage = () => {
+    setOurStoryFormData(prev => ({ ...prev, imageUrl: '' }))
   }
 
   // Helper function to parse milestone data
@@ -389,6 +511,185 @@ export function OurStoryManagement() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Our Story Content */}
+      <Card className="bg-white border-sage/20">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-lg text-chocolate flex items-center gap-2">
+              <Heart className="h-5 w-5 text-caramel" />
+              Our Story Content
+            </CardTitle>
+            <p className="text-sm text-chocolate/70 mt-1">Manage the main story text and image displayed at the top of the Our Story section</p>
+          </div>
+          <Dialog open={showOurStoryDialog} onOpenChange={setShowOurStoryDialog}>
+            <DialogTrigger asChild>
+              <Button className="bg-caramel hover:bg-caramel/90 text-white" onClick={handleEditOurStory}>
+                <Edit className="mr-2 h-4 w-4" />
+                {ourStoryIntro.length > 0 ? 'Edit Story' : 'Add Story'}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-chocolate">
+                  {editingOurStory ? 'Edit Our Story' : 'Add Our Story'}
+                </DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleOurStorySubmit} className="space-y-4">
+                {/* Story Text */}
+                <div>
+                  <Label htmlFor="our-story-message" className="text-chocolate">Story Text *</Label>
+                  <textarea
+                    id="our-story-message"
+                    value={ourStoryFormData.message}
+                    onChange={(e) => setOurStoryFormData({ ...ourStoryFormData, message: e.target.value })}
+                    placeholder="Tell your bakery's story..."
+                    required
+                    rows={6}
+                    className="w-full px-3 py-2 border border-sage/20 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-caramel/20"
+                  />
+                  <p className="text-xs text-chocolate/60 mt-1">The main story text that appears in the Our Story section</p>
+                </div>
+
+                {/* Image Upload */}
+                <div>
+                  <Label className="text-chocolate">Story Image</Label>
+                  {ourStoryFormData.imageUrl ? (
+                    <div className="relative mt-2">
+                      <img
+                        src={ourStoryFormData.imageUrl}
+                        alt="Story preview"
+                        className="w-full h-32 object-cover rounded-lg border border-sage/20"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={removeOurStoryImage}
+                        className="absolute top-2 right-2 bg-white/90 hover:bg-white"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div
+                      {...getOurStoryRootProps()}
+                      className={`mt-2 border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+                        isOurStoryDragActive
+                          ? 'border-caramel bg-caramel/5'
+                          : 'border-sage/20 hover:border-caramel/50'
+                      }`}
+                    >
+                      <input {...getOurStoryInputProps()} />
+                      {isUploadingOurStory ? (
+                        <div className="flex items-center justify-center">
+                          <Loader2 className="h-6 w-6 animate-spin text-caramel" />
+                          <span className="ml-2 text-chocolate">Uploading...</span>
+                        </div>
+                      ) : (
+                        <div>
+                          <Upload className="h-8 w-8 mx-auto text-sage/60 mb-2" />
+                          <p className="text-chocolate/70">
+                            {isOurStoryDragActive
+                              ? 'Drop the image here'
+                              : 'Drag & drop an image here, or click to select'}
+                          </p>
+                          <p className="text-xs text-chocolate/50 mt-1">
+                            Supports: JPG, PNG, GIF, WebP
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <p className="text-xs text-chocolate/60 mt-1">An image to accompany your story text</p>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCloseOurStoryDialog}
+                    disabled={isSubmitting}
+                    className="border-sage/20 text-chocolate"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || !ourStoryFormData.message}
+                    className="bg-caramel hover:bg-caramel/90 text-white"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        {editingOurStory ? 'Update Story' : 'Create Story'}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent className="overflow-hidden">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-caramel" />
+              <span className="ml-2 text-chocolate">Loading our story content...</span>
+            </div>
+          ) : ourStoryIntro.length === 0 ? (
+            <div className="text-chocolate/60 py-8 text-center">
+              No story content found. Click "Add Story" to create your bakery's story!
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {ourStoryIntro.map((item) => (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-[1fr_auto] gap-4 p-4 border border-sage/20 rounded-lg bg-white"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary" className="bg-caramel/10 text-caramel border-caramel/20 flex-shrink-0">
+                        Our Story
+                      </Badge>
+                      <Heart className="h-4 w-4 text-caramel flex-shrink-0" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-chocolate/70 break-words whitespace-pre-line">{item.message}</p>
+                      {item.imageUrl && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <ImageIcon className="h-4 w-4 text-sage/60" />
+                          <img
+                            src={item.imageUrl}
+                            alt="Story image"
+                            className="w-12 h-12 object-cover rounded border border-sage/20 flex-shrink-0"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleEditOurStory}
+                      className="border-sage/20 text-chocolate hover:bg-sage/5"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Milestones List */}
       <Card className="bg-white border-sage/20">
