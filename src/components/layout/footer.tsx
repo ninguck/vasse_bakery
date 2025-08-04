@@ -11,18 +11,13 @@ export function Footer() {
 
   return (
     <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+      initial={{ opacity: 1 }}
       className="bg-chocolate text-white py-12"
     >
       <div className="container mx-auto px-4">
         <motion.div
           variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          initial="visible"
           className="grid md:grid-cols-3 gap-8"
         >
           <motion.div variants={itemVariants}>
@@ -68,10 +63,7 @@ export function Footer() {
       
       {/* Full-width ScrollVelocity section */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        viewport={{ once: true }}
+        initial={{ opacity: 1 }}
         className="w-full overflow-hidden"
       >
         <ScrollVelocity
@@ -86,10 +78,7 @@ export function Footer() {
       
       {/* Copyright section below ScrollVelocity */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.2 }}
-        viewport={{ once: true }}
+        initial={{ opacity: 1 }}
         className="border-t border-white/20 py-4 text-center text-white/70"
       >
         <p>&copy; {new Date().getFullYear()} Vasse Bakery. All rights reserved. Made with ❤️ in Western Australia.</p>
