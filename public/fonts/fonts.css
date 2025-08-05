@@ -1,0 +1,37 @@
+/* Boska Font Family */
+@font-face {
+  font-family: 'Boska';
+  src: url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.woff2') format('woff2'),
+       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.woff') format('woff'),
+       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Boska';
+  src: url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.woff2') format('woff2'),
+       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.woff') format('woff'),
+       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Syne Font Family */
+@font-face {
+  font-family: 'Syne';
+  src: url('./Syne-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('./static/Syne-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+} 

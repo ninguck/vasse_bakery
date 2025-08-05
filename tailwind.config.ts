@@ -15,6 +15,10 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        'boska': ['Boska', 'serif'],
+        'syne': ['Syne', 'sans-serif'],
+      },
       colors: {
         // Vasse Bakery Color Palette
         beige: "#F5EBDD",
