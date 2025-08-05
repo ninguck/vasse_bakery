@@ -22,6 +22,14 @@ const config: Config = {
         'rowan': ['Rowan', 'sans-serif'],
         'boxing': ['Boxing', 'sans-serif'],
       },
+      fontWeight: {
+        'normal': '400',
+        'medium': '500',
+        'semibold': '600',
+        'bold': '700',
+        'extrabold': '800',
+        'black': '900',
+      },
       colors: {
         // Vasse Bakery Color Palette
         beige: "#F5EBDD",

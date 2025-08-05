@@ -80,4 +80,37 @@
   body {
     @apply bg-background text-foreground font-rowan;
   }
+  
+  /* Global paragraph and sub-text styling */
+  p {
+    @apply font-rowan font-normal;
+  }
+  
+  /* Sub-text elements */
+  .text-sm, .text-xs {
+    @apply font-rowan font-normal;
+  }
+  
+  /* Description text */
+  .text-muted-foreground, .text-chocolate\/70, .text-chocolate\/60, .text-chocolate\/50 {
+    @apply font-rowan font-normal;
+  }
+  
+  /* Global heading styling */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-rowan;
+  }
+  
+  /* Heading weight variations */
+  h1, h2 {
+    @apply font-rowan font-bold;
+  }
+  
+  h3, h4 {
+    @apply font-rowan font-semibold;
+  }
+  
+  h5, h6 {
+    @apply font-rowan font-medium;
+  }
 }
