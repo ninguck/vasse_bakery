@@ -159,7 +159,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full"
+          className="w-full group products-cursor"
         >
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 sm:-ml-4">
@@ -176,7 +176,7 @@ export function ProductsSection({ selectedProduct, setSelectedProduct, showMenu,
                       whileHover={{ y: -10, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.3 }}
-                      className="group cursor-pointer h-full"
+                      className="group h-full"
                       onClick={() => setSelectedProduct(product.key)}
                     >
                       <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4">
