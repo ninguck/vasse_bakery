@@ -16,8 +16,11 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
+        'sans': ['Rowan', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+        'serif': ['Boska', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
         'boska': ['Boska', 'serif'],
-        'syne': ['Syne', 'sans-serif'],
+        'rowan': ['Rowan', 'sans-serif'],
+        'boxing': ['Boxing', 'sans-serif'],
       },
       colors: {
         // Vasse Bakery Color Palette

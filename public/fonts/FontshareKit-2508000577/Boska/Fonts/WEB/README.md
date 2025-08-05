@@ -20,6 +20,7 @@ Import `boska.css` at the top of you main Stylesheet.
 ## 5.
 You are now ready to use the following Rules in your CSS to specify each Font Style:
 ```
+font-family: Boska-Regular;
 font-family: Boska-Bold;
 font-family: Boska-Black;
 

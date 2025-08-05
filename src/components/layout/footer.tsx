@@ -61,6 +61,9 @@ export function Footer() {
 
       </div>
       
+      {/* Spacing between main content and animated text */}
+      <div className="h-12 md:h-64"></div>
+      
       {/* Full-width ScrollVelocity section */}
       <motion.div
         initial={{ opacity: 1 }}
@@ -69,9 +72,9 @@ export function Footer() {
         <ScrollVelocity
           texts={["VASSE BAKERY"]}
           velocity={50}
-          className="text-caramel font-syne font-extrabold text-6xl md:text-8xl lg:text-9xl cursor-grab active:cursor-grabbing"
-          parallaxClassName="py-8"
-          scrollerClassName="text-cream select-none font-syne font-extrabold"
+          className="text-caramel font-boxing font-bold text-7xl md:text-9xl lg:text-[12rem] cursor-grab active:cursor-grabbing leading-tight"
+          parallaxClassName="py-2"
+          scrollerClassName="text-cream select-none font-boxing font-bold leading-tight"
           numCopies={8}
         />
       </motion.div>
@@ -79,7 +82,7 @@ export function Footer() {
       {/* Copyright section below ScrollVelocity */}
       <motion.div
         initial={{ opacity: 1 }}
-        className="border-t border-white/20 py-6 text-center text-white/70"
+        className="border-t border-white/20 py-2 text-center text-white/70 leading-tight"
       >
         <p>&copy; {new Date().getFullYear()} Vasse Bakery. All rights reserved. Made with ❤️ in Western Australia.</p>
       </motion.div>

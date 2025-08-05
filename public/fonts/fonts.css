@@ -1,9 +1,40 @@
+/* Boxing Font Family */
+@font-face {
+  font-family: 'Boxing';
+  src: url('./FontshareKit-2508000577/Boxing/Fonts/WEB/fonts/Boxing-Regular.woff2') format('woff2'),
+       url('./FontshareKit-2508000577/Boxing/Fonts/WEB/fonts/Boxing-Regular.woff') format('woff'),
+       url('./FontshareKit-2508000577/Boxing/Fonts/WEB/fonts/Boxing-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rowan Font Family */
+@font-face {
+  font-family: 'Rowan';
+  src: url('./FontshareKit-2508000577/Rowan/Fonts/WEB/fonts/Rowan-Variable.woff2') format('woff2-variations'),
+       url('./FontshareKit-2508000577/Rowan/Fonts/WEB/fonts/Rowan-Variable.woff') format('woff-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rowan';
+  src: url('./FontshareKit-2508000577/Rowan/Fonts/WEB/fonts/Rowan-Regular.woff2') format('woff2'),
+       url('./FontshareKit-2508000577/Rowan/Fonts/WEB/fonts/Rowan-Regular.woff') format('woff'),
+       url('./FontshareKit-2508000577/Rowan/Fonts/WEB/fonts/Rowan-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Boska Font Family */
 @font-face {
   font-family: 'Boska';
-  src: url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.woff2') format('woff2'),
-       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.woff') format('woff'),
-       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Bold.ttf') format('truetype');
+  src: url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Bold.woff2') format('woff2'),
+       url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Bold.woff') format('woff'),
+       url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -11,27 +42,10 @@
 
 @font-face {
   font-family: 'Boska';
-  src: url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.woff2') format('woff2'),
-       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.woff') format('woff'),
-       url('./FontshareKit-2508000561/Boska/Fonts/WEB/fonts/Boska-Black.ttf') format('truetype');
+  src: url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Black.woff2') format('woff2'),
+       url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Black.woff') format('woff'),
+       url('./FontshareKit-2508000577/Boska/Fonts/WEB/fonts/Boska-Black.ttf') format('truetype');
   font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Syne Font Family */
-@font-face {
-  font-family: 'Syne';
-  src: url('./Syne-VariableFont_wght.ttf') format('truetype-variations');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Syne';
-  src: url('./static/Syne-ExtraBold.ttf') format('truetype');
-  font-weight: 800;
   font-style: normal;
   font-display: swap;
 } 
