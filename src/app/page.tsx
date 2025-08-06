@@ -10,6 +10,7 @@ import { LocationSection } from "@/components/sections/location"
 import { CTASection } from "@/components/sections/cta"
 import { FAQSection } from "@/components/sections/faq"
 import { OurStory } from "@/components/sections/our-story"
+import { ReviewsSection } from "@/components/sections/reviews"
 import { LoadingScreen } from "@/components/layout/loading-screen"
 import { AnimatePresence } from "framer-motion"
 import toast from "react-hot-toast"
@@ -92,6 +93,13 @@ export default function VasseBakeryLanding() {
             </div>*/}
             <OurStory />
             <LocationSection />
+            <ReviewsSection 
+              source="database"
+              googleReviewsUrl="https://g.page/r/ChIJf5DFhB5HLioRnIFaZZkUzgo/review"
+              maxReviews={6}
+              minRating={5}
+              requireImages={false}
+            />
             <CTASection setShowMenu={setShowMenu} />
             <FAQSection />
             <Footer />
